@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="sr_action_stock_aging_report"
+			model="ir.actions.act_window">
+			<field name="name">Stock Aging Report</field>
+			<field name="res_model">sr.stock.aging.report</field>
+			<field name="view_mode">form</field>
+			<field name="target">new</field>
+		</record>
+
+		<menuitem id="sr_menu_stock_aging_report"
+			name="Stock Aging Report" parent="stock.menu_warehouse_report"
+			action="sr_action_stock_aging_report" />
+
+		<record id="sr_stock_aging_report_wizard_form_view"
+			model="ir.ui.view">
+			<field name="name">sr.stock.aging.report.wizard.form.view</field>
+			<field name="model">sr.stock.aging.report</field>
+			<field name="arch" type="xml">
+				<form string="Stock Aging">
+					<group>
+						<group>
+							<field name="date_from" required="1" />
+							<field name="result_selection" widget="radio" />
+							<field name="product_categ_ids" widget="many2many_tags"
+								attrs="{'invisible': [('result_selection', '!=', 'category')], 'required': [('result_selection', '==', 'category')]}" />
+							<field name="product_ids" widget="many2many_tags"
+								attrs="{'invisible': [('result_selection', '!=', 'product')], 'required': [('result_selection', '==', 'product')]}" />
+
+							<field name="company_id" required="1" />
+						</group>
+						<group>
+							<field name="period_length" required="1" />
+							<field name="target_result" widget="radio" />
+							<field name="location_ids" widget="many2many_tags"
+								attrs="{'invisible': [('target_result', '!=', 'location')], 'required': [('target_result', '==', 'location')]}" />
+							<field name="warehouse_ids" widget="many2many_tags"
+								attrs="{'invisible': [('target_result', '!=', 'warehouse')], 'required': [('target_result', '==', 'warehouse')]}" />
+						</group>
+					</group>
+					<footer>
+						<button name="print_stock_inventory_aging" string="Print"
+							type="object" default_focus="1" class="oe_highlight" />
+						<button string="Cancel" class="btn btn-default"
+							special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+	</data>
+</odoo>

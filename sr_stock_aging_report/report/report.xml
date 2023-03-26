@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<report id="action_report_stock_aging"
+		string="Stock Aging Report" model="sr.stock.aging.report"
+		report_type="qweb-pdf"
+		name="sr_stock_aging_report.report_stock_aging"
+		file="sr_stock_aging_report.report_stock_aging" />
+
+</odoo>
