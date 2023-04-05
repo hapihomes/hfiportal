@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<template id="report_stock_aging">
+		<t t-call="web.html_container">
+			<t t-call="web.internal_layout">
+				<t t-if="data.get('is_warehouse') == True">
+					<t t-foreach="data.get('warehouse')" t-as="warehouse">
+						<div class="page">
+							<span style="font-size:30px; font-weight: 900;">
+								<center>
+									<span>
+										Stock Aging Report By
+										<span t-esc="get_warehouse_name(warehouse)" />
+										Warehouse
+									</span>
+								</center>
+							</span>
+							<br />
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th class="text-center" style="border: 1px solid black; ">
+											<span style="font-weight: 900;">Start Date</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Period Length (Days)</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Company</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Warehouse</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('date_from')" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('period_length')" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('company_id').name" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="get_warehouse_name(warehouse)" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Product Code</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Product Name</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Total Quantity</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Total Value</span>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['4']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['4']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['4']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['3']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['3']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['3']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['2']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['2']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['2']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['1']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['1']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['1']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['0']['name']" />
+											<p>
+												(+
+												<span t-esc="data.get('column')['0']['stop']" />
+												)
+											</p>
+										</th>
+									</tr>
+									<tr>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t
+										t-foreach="get_warehouse_wise_product_details(data, warehouse)"
+										t-as="line">
+										<tr t-foreach="line" t-as="detail">
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('product_code')" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('product_name')" />
+											</td>
+											<t t-set="total_qty"
+												t-value="detail.get('0') + detail.get('1') + detail.get('3') + detail.get('4')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="'%.2f'%total_qty" />
+											</td>
+											<t t-set="total_value"
+												t-value="total_qty * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="total_value" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('4')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('4') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('3')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('3') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('2')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('2') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('1')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('1') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('0')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('0') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+										</tr>
+									</t>
+								</tbody>
+							</table>
+						</div>
+						<div style="page-break-before:always;" />
+					</t>
+				</t>
+
+				<t t-if="data.get('is_location') == True">
+					<t t-foreach="data.get('location')" t-as="location">
+						<div class="page">
+							<span style="font-size:30px; font-weight: 900;">
+								<center>
+									<span>
+										Stock Aging Report By
+										<span t-esc="get_location_name(location)" />
+										Location
+									</span>
+								</center>
+							</span>
+							<br />
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th class="text-center" style="border: 1px solid black; ">
+											<span style="font-weight: 900;">Start Date</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Period Length (Days)</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Company</span>
+										</th>
+										<th class="text-center" style="border: 1px solid black;">
+											<span style="font-weight: 900;">Location</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('date_from')" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('period_length')" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="data.get('company_id').name" />
+										</td>
+										<td class="text-center" style="border: 1px solid black;">
+											<span t-esc="get_location_name(location)" />
+										</td>
+									</tr>
+								</tbody>
+							</table>
+
+							<table class="table table-condensed">
+								<thead>
+									<tr>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Product Code</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Product Name</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Total Quantity</span>
+										</th>
+										<th class="text-center" rowspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Total Value</span>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['4']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['4']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['4']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['3']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['3']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['3']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['2']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['2']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['2']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['1']['name']" />
+											<p>
+												(
+												<span t-esc="data.get('column')['1']['stop']" />
+												-
+												<br />
+												<span t-esc="data.get('column')['1']['start']" />
+												)
+											</p>
+										</th>
+										<th class="text-center" colspan="2"
+											style="border: 1px solid black; font-weight: 900;">
+											<span t-esc="data.get('column')['0']['name']" />
+											<p>
+												(+
+												<span t-esc="data.get('column')['0']['stop']" />
+												)
+											</p>
+										</th>
+									</tr>
+									<tr>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Quantity</span>
+										</th>
+										<th class="text-center"
+											style="border: 1px solid black; font-weight: 900;">
+											<span>Value</span>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<t
+										t-foreach="get_location_wise_product_details(data, location)"
+										t-as="line">
+										<tr t-foreach="line" t-as="detail">
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('product_code')" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('product_name')" />
+											</td>
+											<t t-set="total_qty"
+												t-value="detail.get('0') + detail.get('1') + detail.get('3') + detail.get('4')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="'%.2f'%total_qty" />
+											</td>
+											<t t-set="total_value"
+												t-value="total_qty * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="total_value" />
+											</td>
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('4')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('4') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('3')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('3') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('2')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('2') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('1')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('1') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+											<td style="border: 1px solid black;">
+												<span t-esc="detail.get('0')" />
+											</td>
+											<t t-set="value"
+												t-value="detail.get('0') * detail.get('cost_price')" />
+											<td style="border: 1px solid black;">
+												<span t-esc="value" />
+											</td>
+
+										</tr>
+									</t>
+								</tbody>
+							</table>
+						</div>
+						<div style="page-break-before:always;" />
+					</t>
+				</t>
+			</t>
+		</t>
+	</template>
+</odoo>
