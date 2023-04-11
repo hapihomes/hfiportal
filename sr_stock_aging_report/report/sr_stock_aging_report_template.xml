@@ -191,7 +191,8 @@
 											<t t-set="total_value"
 												t-value="total_qty * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="total_value" />
+												<!--span t-esc="total_value" /-->
+												<span t-esc="'%.2f'%total_value" />
 											</td>
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('4')" />
@@ -199,7 +200,8 @@
 											<t t-set="value"
 												t-value="detail.get('4') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -208,7 +210,8 @@
 											<t t-set="value"
 												t-value="detail.get('3') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -217,7 +220,8 @@
 											<t t-set="value"
 												t-value="detail.get('2') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -226,7 +230,8 @@
 											<t t-set="value"
 												t-value="detail.get('1') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -235,7 +240,8 @@
 											<t t-set="value"
 												t-value="detail.get('0') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 										</tr>
@@ -434,7 +440,8 @@
 											<t t-set="total_value"
 												t-value="total_qty * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="total_value" />
+												<!--span t-esc="total_value" /-->
+												<span t-esc="'%.2f'%total_value" />
 											</td>
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('4')" />
@@ -442,7 +449,8 @@
 											<t t-set="value"
 												t-value="detail.get('4') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -451,7 +459,8 @@
 											<t t-set="value"
 												t-value="detail.get('3') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -460,7 +469,8 @@
 											<t t-set="value"
 												t-value="detail.get('2') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -469,7 +479,8 @@
 											<t t-set="value"
 												t-value="detail.get('1') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
@@ -478,7 +489,8 @@
 											<t t-set="value"
 												t-value="detail.get('0') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<span t-esc="value" />
+												<!--span t-esc="value" /-->
+												<span t-esc="'%.2f'%value" />
 											</td>
 
 										</tr>
