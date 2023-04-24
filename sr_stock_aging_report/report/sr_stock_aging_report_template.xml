@@ -55,24 +55,19 @@
 							<table class="table table-condensed">
 								<thead>
 									<tr>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Product Code</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Product Name</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Total Quantity</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Total Value</span>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['4']['name']" />
 											<p>
 												(
@@ -83,8 +78,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['3']['name']" />
 											<p>
 												(
@@ -95,8 +89,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['2']['name']" />
 											<p>
 												(
@@ -107,8 +100,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['1']['name']" />
 											<p>
 												(
@@ -119,8 +111,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['0']['name']" />
 											<p>
 												(+
@@ -130,52 +121,40 @@
 										</th>
 									</tr>
 									<tr>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
 									</tr>
 								</thead>
 								<tbody>
-									<t
-										t-foreach="get_warehouse_wise_product_details(data, warehouse)"
-										t-as="line">
+									<t t-foreach="get_warehouse_wise_product_details(data, warehouse)" t-as="line">
 										<tr t-foreach="line" t-as="detail">
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('product_code')" />
@@ -183,64 +162,51 @@
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('product_name')" />
 											</td>
-											<t t-set="total_qty"
-												t-value="detail.get('0') + detail.get('1') + detail.get('3') + detail.get('4')" />
+											<t t-set="total_qty" t-value="detail.get('0') + detail.get('1') + detail.get('2') + detail.get('3') + detail.get('4')" />
 											<td style="border: 1px solid black;">
 												<span t-esc="'%.2f'%total_qty" />
 											</td>
-											<t t-set="total_value"
-												t-value="total_qty * detail.get('cost_price')" />
+											<t t-set="total_value" t-value="total_qty * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="total_value" /-->
 												<span t-esc="'%.2f'%total_value" />
 											</td>
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('4')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('4') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('4') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
 												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('3')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('3') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('3') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
 												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('2')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('2') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('2') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
 												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('1')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('1') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('1') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
 												<span t-esc="'%.2f'%value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('0')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('0') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('0') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
 												<span t-esc="'%.2f'%value" />
 											</td>
 
@@ -304,24 +270,19 @@
 							<table class="table table-condensed">
 								<thead>
 									<tr>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Product Code</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Product Name</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Total Quantity</span>
 										</th>
-										<th class="text-center" rowspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" rowspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span>Total Value</span>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['4']['name']" />
 											<p>
 												(
@@ -332,8 +293,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['3']['name']" />
 											<p>
 												(
@@ -344,8 +304,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['2']['name']" />
 											<p>
 												(
@@ -356,8 +315,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['1']['name']" />
 											<p>
 												(
@@ -368,8 +326,7 @@
 												)
 											</p>
 										</th>
-										<th class="text-center" colspan="2"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" colspan="2" style="border: 1px solid black; font-weight: 900;">
 											<span t-esc="data.get('column')['0']['name']" />
 											<p>
 												(+
@@ -379,52 +336,40 @@
 										</th>
 									</tr>
 									<tr>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Quantity</span>
 										</th>
-										<th class="text-center"
-											style="border: 1px solid black; font-weight: 900;">
+										<th class="text-center" style="border: 1px solid black; font-weight: 900;">
 											<span>Value</span>
 										</th>
 									</tr>
 								</thead>
 								<tbody>
-									<t
-										t-foreach="get_location_wise_product_details(data, location)"
-										t-as="line">
+									<t t-foreach="get_location_wise_product_details(data, location)" t-as="line">
 										<tr t-foreach="line" t-as="detail">
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('product_code')" />
@@ -432,65 +377,52 @@
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('product_name')" />
 											</td>
-											<t t-set="total_qty"
-												t-value="detail.get('0') + detail.get('1') + detail.get('3') + detail.get('4')" />
+											<t t-set="total_qty" t-value="detail.get('0') + detail.get('1') + detail.get('3') + detail.get('4')" />
 											<td style="border: 1px solid black;">
 												<span t-esc="'%.2f'%total_qty" />
 											</td>
-											<t t-set="total_value"
-												t-value="total_qty * detail.get('cost_price')" />
+											<t t-set="total_value" t-value="total_qty * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="total_value" /-->
-												<span t-esc="'%.2f'%total_value" />
+												<span t-esc="total_value" />
 											</td>
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('4')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('4') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('4') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
-												<span t-esc="'%.2f'%value" />
+												<span t-esc="value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('3')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('3') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('3') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
-												<span t-esc="'%.2f'%value" />
+												<span t-esc="value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('2')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('2') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('2') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
-												<span t-esc="'%.2f'%value" />
+												<span t-esc="value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('1')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('1') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('1') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
-												<span t-esc="'%.2f'%value" />
+												<span t-esc="value" />
 											</td>
 
 											<td style="border: 1px solid black;">
 												<span t-esc="detail.get('0')" />
 											</td>
-											<t t-set="value"
-												t-value="detail.get('0') * detail.get('cost_price')" />
+											<t t-set="value" t-value="detail.get('0') * detail.get('cost_price')" />
 											<td style="border: 1px solid black;">
-												<!--span t-esc="value" /-->
-												<span t-esc="'%.2f'%value" />
+												<span t-esc="value" />
 											</td>
 
 										</tr>
