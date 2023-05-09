@@ -31,9 +31,8 @@ class StockAgingReport(models.AbstractModel):
             AND date<=%s
             AND state='done'
             AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where warehouse_id=%s and code='outgoing')
             AND location_dest_id in (select id from stock_location where usage='customer')
-        ''', (product_id, end_date, company_id.id, warehouse_id))
+        ''', (product_id, end_date, company_id.id))
         else:
             self._cr.execute('''
 	            SELECT
@@ -44,9 +43,8 @@ class StockAgingReport(models.AbstractModel):
 	            AND date<=%s
 	            AND state='done'
 	            AND company_id=%s
-                AND picking_type_id in (select id from stock_picking_type where warehouse_id=%s and code='outgoing')
-	            AND location_dest_id in (select id from stock_location where usage='customer')
-	        ''', (product_id, date_start, end_date, company_id.id, warehouse_id))
+                AND location_dest_id in (select id from stock_location where usage='customer')
+	        ''', (product_id, date_start, end_date, company_id.id))
         query_res = self._cr.dictfetchall()[0]
         if query_res.get('qty') == None:
             return 0
@@ -68,9 +66,8 @@ class StockAgingReport(models.AbstractModel):
             AND date<=%s
             AND state='done'
             AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where warehouse_id=%s and code='incoming')
-            AND location_dest_id in (select id from stock_location where usage='internal')
-        ''', (product_id, end_date, company_id.id, warehouse_id))
+            AND location_id in (select id from stock_location where usage='supplier')
+        ''', (product_id, end_date, company_id.id))
         else:
             self._cr.execute('''
 	            SELECT
@@ -81,9 +78,8 @@ class StockAgingReport(models.AbstractModel):
 	            AND date<=%s
 	            AND state='done'
 	            AND company_id=%s
-                AND picking_type_id in (select id from stock_picking_type where warehouse_id=%s and code='incoming')
-	            AND location_dest_id in (select id from stock_location where usage='internal')
-	        ''', (product_id, date_start, end_date, company_id.id, warehouse_id))
+                AND location_id in (select id from stock_location where usage='supplier')
+	        ''', (product_id, date_start, end_date, company_id.id))
 
         query_res = self._cr.dictfetchall()[0]
         if query_res.get('qty') == None:
@@ -107,7 +103,6 @@ class StockAgingReport(models.AbstractModel):
             AND state='done'
             AND company_id=%s
             AND location_id in (select id from stock_location where usage='inventory')
-            AND location_dest_id in (select id from stock_location where usage='internal')
         ''', (product_id, end_date, company_id.id))
         else:
             self._cr.execute('''
@@ -120,7 +115,6 @@ class StockAgingReport(models.AbstractModel):
 	            AND state='done'
 	            AND company_id=%s
                 AND location_id in (select id from stock_location where usage='inventory')
-	            AND location_dest_id in (select id from stock_location where usage='internal')
 	        ''', (product_id, date_start, end_date, company_id.id))
 
         query_res = self._cr.dictfetchall()[0]
@@ -129,7 +123,7 @@ class StockAgingReport(models.AbstractModel):
         else:
             return query_res.get('qty')
 
-    def _find_internal_transfer_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
+    def _find_inventory_return_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
         end_date = end_date+" 23:59:59"
         if start_date:
             date_start = start_date+" 00:00:00"
@@ -144,22 +138,20 @@ class StockAgingReport(models.AbstractModel):
             AND date<=%s
             AND state='done'
             AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-            AND location_id in (select id from stock_location where usage='internal' and barcode='WH-STOCK')
+            AND location_id in (select id from stock_location where usage='customer')
         ''', (product_id, end_date, company_id.id))
         else:
             self._cr.execute('''
-                SELECT
-                    SUM(product_uom_qty) AS qty
-                FROM stock_move
-                WHERE product_id = %s
-                AND date>=%s
-                AND date<=%s
-                AND state='done'
-                AND company_id=%s
-                AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-                AND location_id in (select id from stock_location where usage='internal' and barcode='WH-STOCK')
-            ''', (product_id, date_start, end_date, company_id.id))
+	            SELECT
+	                SUM(product_uom_qty) AS qty
+	            FROM stock_move
+	            WHERE product_id = %s
+	            AND date>=%s
+	            AND date<=%s
+	            AND state='done'
+	            AND company_id=%s
+                AND location_id in (select id from stock_location where usage='customer')
+	        ''', (product_id, date_start, end_date, company_id.id))
 
         query_res = self._cr.dictfetchall()[0]
         if query_res.get('qty') == None:
@@ -167,85 +159,59 @@ class StockAgingReport(models.AbstractModel):
         else:
             return query_res.get('qty')
 
-    def _find_internal_transfer_get_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
+    def _find_internal_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
         end_date = end_date+" 23:59:59"
         if start_date:
             date_start = start_date+" 00:00:00"
         else:
             date_start = start_date
-
-        if not start_date:
-            self._cr.execute('''
-            SELECT
-                SUM(product_uom_qty) AS qty
-            FROM stock_move
-            WHERE product_id = %s
-            AND date<=%s
-            AND state='done'
-            AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-            AND location_dest_id in (select id from stock_location where usage='internal' and barcode='WH-STOCK')
-        ''', (product_id, end_date, company_id.id))
+        
+        domain = [
+            ('product_id', '=', product_id),
+            ('date', '>=', date_start),
+            ('date', '<=', end_date),
+            ('state', '=', 'done'),
+            ('company_id', '=', company_id.id),
+            ('picking_type_id.sequence_code', '=', 'INT'),
+            ('picking_type_id.code', '=', 'internal'),
+            ('location_id.usage', '=', 'internal'),
+            ('location_id.warehouse_id', '=', warehouse_id),
+            ('location_dest_id.usage', '=', 'internal'),
+            ('location_dest_id.warehouse_id', '=', False),
+        ]
+        moves = self.env['stock.move.line'].search(domain)
+        qty_available = sum(m.qty_done for m in moves)
+        if qty_available > 0:
+            return qty_available
         else:
-            self._cr.execute('''
-                SELECT
-                    SUM(product_uom_qty) AS qty
-                FROM stock_move
-                WHERE product_id = %s
-                AND date>=%s
-                AND date<=%s
-                AND state='done'
-                AND company_id=%s
-                AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-                AND location_dest_id in (select id from stock_location where usage='internal' and barcode='WH-STOCK')
-            ''', (product_id, date_start, end_date, company_id.id))
-
-        query_res = self._cr.dictfetchall()[0]
-        if query_res.get('qty') == None:
             return 0
-        else:
-            return query_res.get('qty')
-
-    def _find_internal_transfer_get_warehouse_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
+    
+    def _find_internal_return_qty(self, product_id, warehouse_id, start_date, end_date, company_id):
         end_date = end_date+" 23:59:59"
         if start_date:
             date_start = start_date+" 00:00:00"
         else:
             date_start = start_date
-
-        if not start_date:
-            self._cr.execute('''
-            SELECT
-                SUM(product_uom_qty) AS qty
-            FROM stock_move
-            WHERE product_id = %s
-            AND date<=%s
-            AND state='done'
-            AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-            AND location_id in (select id from stock_location where usage='internal' and warehouse_id=%s)
-            AND location_dest_id in (select id from stock_location where usage='internal' and warehouse_id=%s)
-        ''', (product_id, end_date, company_id.id, warehouse_id, warehouse_id))
+        
+        domain = [
+            ('product_id', '=', product_id),
+            ('date', '>=', date_start),
+            ('date', '<=', end_date),
+            ('state', '=', 'done'),
+            ('company_id', '=', company_id.id),
+            ('picking_type_id.sequence_code', '=', 'INT'),
+            ('picking_type_id.code', '=', 'internal'),
+            ('location_id.usage', '=', 'internal'),
+            ('location_id.warehouse_id', '=', False),
+            ('location_dest_id.usage', '=', 'internal'),
+            ('location_dest_id.warehouse_id', '=', warehouse_id),
+        ]
+        moves = self.env['stock.move.line'].search(domain)
+        qty_available = sum(m.qty_done for m in moves)
+        if qty_available > 0:
+            return qty_available
         else:
-            self._cr.execute('''
-                SELECT
-                    SUM(product_uom_qty) AS qty
-                FROM stock_move
-                WHERE product_id = %s
-                AND date>=%s
-                AND date<=%s
-                AND state='done'
-                AND company_id=%s
-                AND picking_type_id in (select id from stock_picking_type where sequence_code='INT' and code='internal')
-                AND location_id in (select id from stock_location where usage='internal' and warehouse_id=%s)
-                AND location_dest_id in (select id from stock_location where usage='internal' and warehouse_id=%s)
-            ''', (product_id, date_start, end_date, company_id.id, warehouse_id, warehouse_id))
-
-        query_res = self._cr.dictfetchall()[0]
-        if query_res.get('qty') == None:
             return 0
-        else:
-            return query_res.get('qty')
 
     def _get_warehouse_wise_product_details(self, data, warehouse):
         product_details = []
@@ -270,20 +236,25 @@ class StockAgingReport(models.AbstractModel):
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
                 inventory_qty = self._find_inventory_qty(record.id, warehouse, data.get('column').get(
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
-                internal_transfer_qty = self._find_internal_transfer_qty(record.id, warehouse, data.get('column').get(
+                inventory_get_return_qty = self._find_inventory_return_qty(record.id, warehouse, data.get('column').get(
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
-                internal_transfer_get_qty = self._find_internal_transfer_get_qty(record.id, warehouse, data.get('column').get(
+                internal_qty = self._find_internal_qty(record.id, warehouse, data.get('column').get(
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
-                internal_transfer_get_warehouse_qty = self._find_internal_transfer_get_warehouse_qty(record.id, warehouse, data.get('column').get(
+                internal_get_return_qty = self._find_internal_return_qty(record.id, warehouse, data.get('column').get(
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
-                total_qty = (inventory_qty + incoming_qty +
-                             internal_transfer_get_qty) - outgoing_qty
-                if internal_transfer_qty:
-                    total_qty -= internal_transfer_qty
-                if internal_transfer_get_warehouse_qty:
-                    total_qty -= internal_transfer_get_warehouse_qty
+                
+                total_qty = incoming_qty - outgoing_qty
+                if inventory_qty:
+                    total_qty += inventory_qty
+                if inventory_get_return_qty:
+                    total_qty += inventory_get_return_qty
+                if internal_qty:
+                    total_qty -= internal_qty
+                if internal_get_return_qty:
+                    total_qty += internal_get_return_qty
+
                 column_value.update({
-                    line: total_qty  # incoming_qty - outgoing_qty
+                    line: total_qty
                 })
             qty_details.append(column_value)
         product_details.append(qty_details)
@@ -304,9 +275,8 @@ class StockAgingReport(models.AbstractModel):
             AND date<=%s
             AND state='done' 
             AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where default_location_src_id=%s and code='outgoing')
-            AND location_dest_id in (select id from stock_location where usage='customer') 
-        ''', (product_id, end_date, company_id.id, location_id))
+            AND location_dest_id in (select id from stock_location where id=%s) 
+        ''', (product_id, end_date, company_id.id, location_id))#AND picking_type_id in (select id from stock_picking_type where default_location_src_id=%s and code='outgoing')
 
         else:
             self._cr.execute('''
@@ -318,9 +288,8 @@ class StockAgingReport(models.AbstractModel):
 	            AND date<=%s
 	            AND state='done' 
 	            AND company_id=%s
-	            AND picking_type_id in (select id from stock_picking_type where default_location_src_id=%s and code='outgoing')
-	            AND location_dest_id in (select id from stock_location where usage='customer') 
-	        ''', (product_id, date_start, end_date, company_id.id, location_id))
+	            AND location_dest_id in (select id from stock_location where id=%s) 
+	        ''', (product_id, date_start, end_date, company_id.id, location_id))#AND picking_type_id in (select id from stock_picking_type where default_location_src_id=%s and code='outgoing')
 
         query_res = self._cr.dictfetchall()[0]
         if query_res.get('qty') == None:
@@ -343,9 +312,8 @@ class StockAgingReport(models.AbstractModel):
             AND date<=%s
             AND state='done' 
             AND company_id=%s
-            AND picking_type_id in (select id from stock_picking_type where default_location_dest_id=%s and code='incoming')
-            AND location_dest_id in (select id from stock_location where usage='internal') 
-        ''', (product_id, end_date, company_id.id, location_id))
+            AND location_id in (select id from stock_location where id=%s) 
+        ''', (product_id, end_date, company_id.id, location_id))# AND picking_type_id in (select id from stock_picking_type where default_location_dest_id=%s and code='incoming')
         else:
             self._cr.execute('''
 	            SELECT
@@ -356,9 +324,8 @@ class StockAgingReport(models.AbstractModel):
 	            AND date<=%s
 	            AND state='done' 
 	            AND company_id=%s
-	            AND picking_type_id in (select id from stock_picking_type where default_location_dest_id=%s and code='incoming')
-	            AND location_dest_id in (select id from stock_location where usage='internal') 
-	        ''', (product_id, date_start, end_date, company_id.id, location_id))
+	            AND location_id in (select id from stock_location where id=%s) 
+	        ''', (product_id, date_start, end_date, company_id.id, location_id))#AND picking_type_id in (select id from stock_picking_type where default_location_dest_id=%s and code='incoming')
 
         query_res = self._cr.dictfetchall()[0]
         if query_res.get('qty') == None:
@@ -388,7 +355,7 @@ class StockAgingReport(models.AbstractModel):
                 incoming_qty = self._find_incoming_qty_by_location(record.id, location, data.get('column').get(
                     line).get('start'), data.get('column').get(line).get('stop'), data.get('company_id'))
                 column_value.update({
-                    line: incoming_qty - outgoing_qty
+                    line:  outgoing_qty - incoming_qty
                 })
             qty_details.append(column_value)
         product_details.append(qty_details)
