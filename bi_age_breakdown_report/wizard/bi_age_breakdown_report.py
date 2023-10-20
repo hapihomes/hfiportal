@@ -168,10 +168,10 @@ class Inventory_Age_Breakdown_analysis_wizard(models.Model):
                     domain += [('company_id','in',self.company_ids.ids)]
                 
                     location_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal']),('company_id','=',company.id)])
-                    location_dest_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal']),('company_id','=',company.id)])
+                    location_dest_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal','transit','inventory']),('company_id','=',company.id)])
                 else:
                     location_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal'])])
-                    location_dest_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal'])])
+                    location_dest_id = self.env['stock.location'].sudo().search([('usage', 'in', ['internal','transit','inventory'])])
                     
                 domain += [('location_id', 'in', location_id.ids)]
                 domain += [('state','=','done')]
@@ -192,7 +192,7 @@ class Inventory_Age_Breakdown_analysis_wizard(models.Model):
                 
                 stock_qty_obj = self.env['stock.quant']                        
                 stock_qty_lines = stock_qty_obj.sudo().search([('product_id', '=', product_id.id),('company_id','=',company.id)])
-                available_quantity = sum(row.quantity for row in stock_qty_lines if row.quantity > 0)
+                available_quantity = sum(row.quantity for row in stock_qty_lines if row.quantity > 0 and row.location_id.location_id)
                 worksheet.write(rows, col, available_quantity  or '0', for_left_not_bold)
                 
                 col += 1
@@ -210,8 +210,7 @@ class Inventory_Age_Breakdown_analysis_wizard(models.Model):
                     domain += [('state','=','done')]
                     if self.company_ids:
                         domain += [('company_id','=',company.id)]
-                    domain += [('location_dest_id', 'in', location_dest_id.ids)]
-                    # domain +=[('picking_id.picking_type_id.code', '=', 'incoming')]
+                    domain += [('location_usage', 'not in', ['internal','transit']),('location_dest_usage' ,'in', ['internal','transit',])]
                     move_lines = self.env['stock.move.line'].sudo().search(domain)
 
                     new_domain = [('date','<=',str(start)),('date','>',str(stop))]
@@ -220,13 +219,21 @@ class Inventory_Age_Breakdown_analysis_wizard(models.Model):
                     if self.company_ids:
                         new_domain += [('company_id','=',company.id)]
                     new_domain += [('location_usage', 'in', ['internal','transit']),('location_dest_usage' ,'not in', ['internal','transit'])]
-                    
                     new_move_lines = self.env['stock.move.line'].sudo().search(new_domain)
                     
+                    extra_domain = [('date','<=',str(start)),('date','>',str(stop))]
+                    extra_domain += [('product_id','=',product_id.id)]
+                    extra_domain += [('state','=','done')]
+                    if self.company_ids:
+                        extra_domain += [('company_id','=',company.id)]
+                    extra_domain += [('picking_type_id.code', '=', 'internal'),('location_id.usage', 'in', ['internal']),('location_dest_id.usage', 'in', ['internal'])]
+                    extra_move_lines = self.env['stock.move.line'].sudo().search(extra_domain)
+                    
+                    extra_qty_on_hand = sum(line.qty_done for line in extra_move_lines if not line.location_dest_id.location_id)
                     new_qty_on_hand = sum(line.qty_done for line in new_move_lines)
-                    qty_on_hand = sum(line.qty_done for line in move_lines)
-            
-                    final_qty = qty_on_hand - new_qty_on_hand
+                    qty_on_hand = sum(line.qty_done for line in move_lines if line.location_dest_id.location_id)
+
+                    final_qty = qty_on_hand - new_qty_on_hand + extra_qty_on_hand
                     
                     if qty_on_hand > 0.0:
                         qty_to_carry = qty_to_carry - qty_on_hand
