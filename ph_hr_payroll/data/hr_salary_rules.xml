@@ -13,6 +13,7 @@
     <record id="ph_sss" model="hr.salary.rule">
         <field name="name">SSS Contribution</field>
         <field name="code">SSS</field>
+        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="amount_select">fix</field>
         <field name="amount_fix">500</field>
