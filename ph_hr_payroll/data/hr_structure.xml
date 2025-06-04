@@ -2,6 +2,6 @@
     <!-- Define the Philippine Salary Structure -->
     <record id="ph_salary_structure" model="hr.payroll.structure">
         <field name="name">Philippines Salary Structure</field>
-        <field name="type_id" ref="hr_payroll.structure_type_employee"/>
+        <field name="type_id" ref="hr_payroll.structure_type_employee_monthly"/>
     </record>
 </odoo>
