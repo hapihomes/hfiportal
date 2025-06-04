@@ -2,7 +2,6 @@
     <record id="structure_type_employee_monthly" model="hr.payroll.structure.type">
         <field name="name">Employee Monthly</field>
         <field name="default_schedule_pay">monthly</field>
-        <field name="code">employee_monthly</field>
     </record>
 
     <record id="ph_salary_structure" model="hr.payroll.structure">
@@ -10,4 +9,5 @@
         <field name="type_id" ref="ph_hr_payroll.structure_type_employee_monthly"/>
     </record>
 </odoo>
+
 
