@@ -1,0 +1,19 @@
+<odoo>
+    <!-- Loan form view -->
+    <record id="view_hr_loan_form" model="ir.ui.view">
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="amount"/>
+                        <field name="monthly_deduction"/>
+                        <field name="remaining_amount"/>
+                        <field name="state"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
