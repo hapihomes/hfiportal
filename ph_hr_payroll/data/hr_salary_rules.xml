@@ -23,6 +23,7 @@
     <record id="ph_philhealth" model="hr.salary.rule">
         <field name="name">PhilHealth Contribution</field>
         <field name="code">PHILHEALTH</field>
+        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="amount_select">fix</field>
         <field name="amount_fix">400</field>
@@ -32,6 +33,7 @@
     <record id="ph_pagibig" model="hr.salary.rule">
         <field name="name">Pag-IBIG Contribution</field>
         <field name="code">PAGIBIG</field>
+        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="amount_select">fix</field>
         <field name="amount_fix">100</field>
@@ -42,6 +44,7 @@
     <record id="ph_loan" model="hr.salary.rule">
         <field name="name">Loan Deduction</field>
         <field name="code">LOAN</field>
+        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
@@ -54,6 +57,7 @@
     <record id="ph_tax" model="hr.salary.rule">
         <field name="name">Withholding Tax</field>
         <field name="code">TAX</field>
+        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
         <field name="category_id" ref="hr_payroll.DED"/>
         <field name="amount_select">code</field>
         <field name="amount_python_compute">
