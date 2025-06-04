@@ -1,0 +1,54 @@
+<odoo>
+    <record id="view_hr_loan_tree" model="ir.ui.view">
+        <field name="name">hr.loan.tree</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Loans">
+                <field name="employee_id"/>
+                <field name="amount"/>
+                <field name="state"/>
+                <field name="date_loan"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_hr_loan_form" model="ir.ui.view">
+        <field name="name">hr.loan.form</field>
+        <field name="model">hr.loan</field>
+        <field name="arch" type="xml">
+            <form string="Employee Loan">
+                <sheet>
+                    <group>
+                        <field name="employee_id"/>
+                        <field name="amount"/>
+                        <field name="state" readonly="1"/>
+                        <field name="date_loan"/>
+                    </group>
+                    <footer>
+                        <button string="Approve" type="object" name="action_approve" 
+                                states="draft" class="btn-primary"/>
+                        <button string="Mark as Paid" type="object" name="action_paid" 
+                                states="approved" class="btn-success"/>
+                        <button string="Reset to Draft" type="object" name="action_set_draft" 
+                                states="approved,paid"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_hr_loan" model="ir.actions.act_window">
+        <field name="name">Employee Loans</field>
+        <field name="res_model">hr.loan</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new employee loan.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_hr_loan_root" name="Employee Loans" parent="hr.menu_hr_root" sequence="10"/>
+    <menuitem id="menu_hr_loan" name="Loans" parent="menu_hr_loan_root" action="action_hr_loan"/>
+</odoo>
