@@ -7,7 +7,6 @@
     <record id="ph_salary_structure" model="hr.payroll.structure">
         <field name="name">Philippines Salary Structure</field>
         <field name="type_id" ref="ph_hr_payroll.structure_type_employee_monthly"/>
-        <field name="struct_id" ref="ph_hr_payroll.ph_salary_structure"/>
     </record>
 </odoo>
 
