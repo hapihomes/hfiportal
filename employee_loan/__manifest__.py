@@ -1,12 +1,14 @@
 {
-    'name': 'Employee Loan',
-    'version': '1.0',
-    'category': 'Human Resources',
-    'summary': 'Manage employee loans',
-    'depends': ['hr'],
-    'data': [
-        'views/hr_loan_views.xml',
+    "name": "Employee Loan",
+    "version": "1.0",
+    "category": "Human Resources",
+    "summary": "Manage employee loans",
+    "depends": ["base", "hr"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/hr_loan_views.xml",
+        "views/hr_loan_menu.xml"
     ],
-    'installable': True,
-    'application': False,
+    "installable": True,
+    "application": True
 }
