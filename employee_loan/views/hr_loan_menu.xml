@@ -1,4 +1,0 @@
-<odoo>
-    <menuitem id="menu_hr_loan_root" name="Employee Loan" parent="hr.menu_hr_root"/>
-    <menuitem id="menu_hr_loan" name="Loan Requests" parent="menu_hr_loan_root" action="action_hr_loan"/>
-</odoo>
