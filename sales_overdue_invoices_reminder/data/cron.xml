@@ -10,7 +10,6 @@
             <!-- ✅ Correct scheduling fields -->
             <field name="interval_number">3</field> <!-- Every 3 days -->
             <field name="interval_type">days</field>
-            <field name="numbercall">-1</field> <!-- Run indefinitely -->
 
             <field name="active" eval="True"/>
         </record>
