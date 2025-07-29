@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-  <data noupdate="1">
+    <data noupdate="1">
 
-    <!-- Email Template -->
-    <record id="email_template_overdue_invoice" model="mail.template">
-      <field name="name">Overdue Invoice Reminder</field>
-      <field name="model_id" ref="account.model_account_move"/>
-      <field name="subject">Overdue Invoices for Your Customers</field>
-      <field name="email_from">${(user.email or 'noreply@yourcompany.com')}</field>
-      <field name="email_to">${object.user_id.email}</field>
-      <field name="body_html" type="html">
-        <![CDATA[
-        <p>Hello ${object.user_id.name},</p>
-        <p>Here are the overdue invoices assigned to you:</p>
-        <table border="1" cellpadding="5" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Sales Order Reference</th>
-                    <th>Invoice Reference</th>
-                    <th>Customer Name</th>
-                    <th>Invoice Due Date</th>
-                    <th>Total Amount</th>
-                </tr>
-            </thead>
-            <tbody>
-            % for invoice in ctx.get('invoices', []):
-                <tr>
-                    <td>${invoice.get('sale_ref')}</td>
-                    <td>${invoice.get('invoice_ref')}</td>
-                    <td>${invoice.get('customer')}</td>
-                    <td>${invoice.get('due_date')}</td>
-                    <td>${invoice.get('amount')}</td>
-                </tr>
-            % endfor
-            </tbody>
-        </table>
-        <p>Regards,<br/>Accounting Team</p>
-        ]]>
-      </field>
-    </record>
+        <!-- Email Template -->
+        <record id="email_template_overdue_invoice_reminder" model="mail.template">
+            <field name="name">Overdue Invoice Reminder</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">Overdue Invoices for Your Customers</field>
+            <field name="email_from">${(user.email or 'noreply@example.com')|safe}</field>
+            <field name="email_to">${object.user_id.email|safe}</field>
+            <field name="body_html" type="html">
+                <![CDATA[
+                    <p>Hello ${object.user_id.name},</p>
+                    <p>Here is a summary of overdue invoices assigned to you:</p>
+                    <table border="1" cellpadding="4" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Sales Order Reference</th>
+                                <th>Invoice Reference</th>
+                                <th>Customer Name</th>
+                                <th>Due Date</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            % for invoice in ctx.get('invoices', []):
+                            <tr>
+                                <td>${invoice.invoice_origin}</td>
+                                <td>${invoice.name}</td>
+                                <td>${invoice.partner_id.name}</td>
+                                <td>${invoice.invoice_date_due}</td>
+                                <td>${invoice.amount_total}</td>
+                            </tr>
+                            % endfor
+                        </tbody>
+                    </table>
+                    <p>Regards,<br/>Your Accounting Team</p>
+                ]]>
+            </field>
+        </record>
 
-  </data>
+    </data>
 </odoo>
+
 
 
