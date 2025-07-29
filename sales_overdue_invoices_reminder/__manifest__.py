@@ -8,9 +8,6 @@
     'depends': [
         'accountant', 'sale_management'
     ],
-    'data': [
-        'data/cron.xml',
-    ],
     'installable' : True,
     'application' : False,
     'auto_install' : False,
