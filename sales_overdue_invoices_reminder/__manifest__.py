@@ -6,7 +6,7 @@
     'author': 'Joff Pascual',
     'website': 'https://joffpascual.odoo.com',
     'depends': [
-        'account', 'sales'
+        'accountant', 'sales_management'
     ],
     'data': [
         'data/cron.xml',
