@@ -12,6 +12,21 @@
             <field name="active" eval="True"/>
         </record>
 
+        <!-- Minimal Email Template -->
+        <record id="email_template_overdue_invoice_reminder" model="mail.template">
+            <field name="name">Overdue Invoice Reminder</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">Overdue Invoice Reminder</field>
+            <field name="email_from">${(user.email_formatted or 'noreply@example.com')|safe}</field>
+            <field name="email_to">${object.partner_id.email or ''}</field>
+            <field name="body_html" type="html">
+                <![CDATA[
+                <p>Dear ${object.partner_id.name},</p>
+                <p>This is a friendly reminder that you have overdue invoices.</p>
+                ]]>
+            </field>
+        </record>
+        
         <!-- Email Template 
         <record id="email_template_overdue_invoice_reminder" model="mail.template">
             <field name="name">Overdue Invoice Reminder</field>
