@@ -3,58 +3,58 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Scheduled Action -->
+        <!-- ⏰ Scheduled Action (Cron Job) -->
         <record id="ir_cron_overdue_invoice_reminder" model="ir.cron">
             <field name="name">Send Overdue Invoice Reminders</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="state">code</field>
             <field name="code">model.send_overdue_invoice_reminders()</field>
-            <field name="interval_number">3</field>
+            <field name="interval_number">3</field> <!-- Every 3 days -->
             <field name="interval_type">days</field>
+            <field name="numbercall">-1</field> <!-- Run indefinitely -->
             <field name="active" eval="True"/>
         </record>
 
-        <!-- Email Template -->
-        <record id="email_template_overdue_invoice_reminder" model="mail.template">
+        <!-- 📧 Email Template -->
+        <record id="email_template_overdue_invoice" model="mail.template">
             <field name="name">Overdue Invoice Reminder</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="subject">Overdue Invoices for Your Customers</field>
-            <field name="email_from">${(user.email or 'noreply@example.com')|safe}</field>
-            <field name="email_to">${object.user_id.email|safe}</field>
+            <field name="subject">Overdue Invoice Reminder - ${object.name}</field>
+            <field name="email_from">${(user.email_formatted or '')}</field>
+            <field name="email_to">${object.user_id.email or ''}</field>
             <field name="body_html" type="html">
                 <![CDATA[
-                    <p>Hello ${object.user_id.name},</p>
-                    <p>Here is a summary of overdue invoices assigned to you:</p>
-                    <table border="1" cellpadding="4" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Sales Order Reference</th>
-                                <th>Invoice Reference</th>
-                                <th>Customer Name</th>
-                                <th>Due Date</th>
-                                <th>Total Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            % for invoice in ctx.get('invoices', []):
-                            <tr>
-                                <td>${invoice.invoice_origin}</td>
-                                <td>${invoice.name}</td>
-                                <td>${invoice.partner_id.name}</td>
-                                <td>${invoice.invoice_date_due}</td>
-                                <td>${invoice.amount_total}</td>
-                            </tr>
-                            % endfor
-                        </tbody>
-                    </table>
-                    <p>Regards,<br/>Your Accounting Team</p>
+                <p>Hello ${object.user_id.name},</p>
+                <p>This is a reminder that you have an overdue invoice:</p>
+
+                <table border="1" cellspacing="0" cellpadding="4">
+                    <thead>
+                        <tr>
+                            <th>Sales Order Reference</th>
+                            <th>Invoice Reference</th>
+                            <th>Customer Name</th>
+                            <th>Invoice Due Date</th>
+                            <th>Total Invoice Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${object.invoice_origin or '-'}</td>
+                            <td>${object.name}</td>
+                            <td>${object.partner_id.name}</td>
+                            <td>${object.invoice_date_due or 'N/A'}</td>
+                            <td>${format_amount(object.amount_total, object.currency_id)}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <p>Kindly follow up with the customer.</p>
+                <p>Regards,<br/>Odoo System</p>
                 ]]>
             </field>
         </record>
 
     </data>
 </odoo>
-
-
 
 
