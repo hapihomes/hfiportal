@@ -26,44 +26,5 @@
                 ]]>
             </field>
         </record>
-        
-        <!-- Email Template 
-        <record id="email_template_overdue_invoice_reminder" model="mail.template">
-            <field name="name">Overdue Invoice Reminder</field>
-            <field name="model_id" ref="account.model_account_move"/>
-            <field name="subject">Overdue Invoice Reminder</field>
-            <field name="email_from">${(user.email_formatted or 'noreply@example.com')|safe}</field>
-            <field name="email_to">${object.partner_id.email or ''}</field>
-            <field name="body_html" type="html">
-                <![CDATA[
-                <p>Dear ${object.partner_id.name},</p>
-                <p>This is a friendly reminder that you have overdue invoices. Please find the details below:</p>
-
-                <table border="1" cellpadding="6" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Sales Order Reference</th>
-                            <th>Invoice Reference</th>
-                            <th>Customer Name</th>
-                            <th>Due Date</th>
-                            <th>Total Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>${object.invoice_origin or ''}</td>
-                            <td>${object.name}</td>
-                            <td>${object.partner_id.name}</td>
-                            <td>${object.invoice_date_due or ''}</td>
-                            <td>${format_amount(object.amount_total, object.currency_id)}</td>
-                        </tr>
-                    </tbody>
-                </table>
-
-                <p>Please settle your account at your earliest convenience. Thank you.</p>
-                ]]>
-            </field>
-        </record>-->
-
     </data>
 </odoo>
