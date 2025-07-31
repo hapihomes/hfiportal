@@ -4,7 +4,6 @@
     'description': 'Sends email notifications every 3 days to salespersons about their overdue invoices.',
     'summary': 'Automatically notifies salespersons of their overdue invoices',
     'author': 'Joff Pascual',
-    'website': 'https://joffpascual.odoo.com',
     'depends': [
         'account', 'sale_management'
     ],
