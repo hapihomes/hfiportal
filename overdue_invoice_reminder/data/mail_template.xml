@@ -1,0 +1,27 @@
+<odoo>
+    <data noupdate="0">
+        <record id="email_template_overdue_invoice_reminder" model="mail.template">
+            <field name="name">Overdue Invoice Reminder</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="subject">[Reminder] Overdue Invoices As of ${object.company_id.name}</field>
+            <field name="email_from">${(user.email or 'noreply@yourcompany.com')}</field>
+            <field name="email_to">${user.email}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                <![CDATA[
+                <p>Hello ${user.name},</p>
+                <p>You have the following overdue invoices:</p>
+                <ul>
+                    % for inv in ctx.get('invoices', []):
+                        <li>
+                            ${inv.name or 'Unnamed'} - Due: ${inv.invoice_date_due} - Customer: ${inv.partner_id.name}
+                        </li>
+                    % endfor
+                </ul>
+                <p>Please follow up accordingly.</p>
+                <p>Thank you,<br/>Odoo System</p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>
