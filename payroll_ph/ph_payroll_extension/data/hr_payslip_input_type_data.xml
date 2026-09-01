@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="input_type_basic_wage" model="hr.payslip.input.type">
+        <field name="name">Prorated Basic Wage</field>
+        <field name="code">BASICWAGE</field>
+    </record>
+
+    <record id="input_type_overtime" model="hr.payslip.input.type">
+        <field name="name">Overtime Pay</field>
+        <field name="code">OVERTIME</field>
+    </record>
+
+    <record id="input_type_commission" model="hr.payslip.input.type">
+        <field name="name">Sales Commission</field>
+        <field name="code">COMMISSION</field>
+    </record>
+
+    <record id="input_type_allow_taxable" model="hr.payslip.input.type">
+        <field name="name">Taxable Allowances (Total)</field>
+        <field name="code">ALLOWTAX</field>
+    </record>
+
+    <record id="input_type_allow_nontaxable" model="hr.payslip.input.type">
+        <field name="name">Non-Taxable Allowances (Total)</field>
+        <field name="code">ALLOWNONTAX</field>
+    </record>
+
+    <record id="input_type_sss_loan" model="hr.payslip.input.type">
+        <field name="name">SSS Loan Deduction</field>
+        <field name="code">SSSLOAN</field>
+    </record>
+
+    <record id="input_type_hdmf_loan" model="hr.payslip.input.type">
+        <field name="name">HDMF/Pag-IBIG Loan Deduction</field>
+        <field name="code">HDMFLOAN</field>
+    </record>
+
+    <record id="input_type_company_loan" model="hr.payslip.input.type">
+        <field name="name">Company Loan Deduction</field>
+        <field name="code">COMPANYLOAN</field>
+    </record>
+
+    <record id="input_type_salary_advance" model="hr.payslip.input.type">
+        <field name="name">Salary Advance Deduction</field>
+        <field name="code">SALARYADV</field>
+    </record>
+
+    <record id="input_type_sss_ee" model="hr.payslip.input.type">
+        <field name="name">SSS Contribution - Employee Share</field>
+        <field name="code">SSSEE</field>
+    </record>
+
+    <record id="input_type_sss_er" model="hr.payslip.input.type">
+        <field name="name">SSS Contribution - Employer Share</field>
+        <field name="code">SSSER</field>
+    </record>
+
+    <record id="input_type_phic_ee" model="hr.payslip.input.type">
+        <field name="name">PhilHealth Contribution - Employee Share</field>
+        <field name="code">PHICEE</field>
+    </record>
+
+    <record id="input_type_phic_er" model="hr.payslip.input.type">
+        <field name="name">PhilHealth Contribution - Employer Share</field>
+        <field name="code">PHICER</field>
+    </record>
+
+    <record id="input_type_hdmf_ee" model="hr.payslip.input.type">
+        <field name="name">HDMF (Pag-IBIG) Contribution - Employee Share</field>
+        <field name="code">HDMFEE</field>
+    </record>
+
+    <record id="input_type_hdmf_er" model="hr.payslip.input.type">
+        <field name="name">HDMF (Pag-IBIG) Contribution - Employer Share</field>
+        <field name="code">HDMFER</field>
+    </record>
+
+</odoo>

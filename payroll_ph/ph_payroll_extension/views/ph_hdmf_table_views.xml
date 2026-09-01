@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ph_hdmf_table_list" model="ir.ui.view">
+        <field name="name">ph.hdmf.table.list</field>
+        <field name="model">ph.hdmf.table</field>
+        <field name="arch" type="xml">
+            <list string="HDMF (Pag-IBIG) Contribution Table" editable="bottom">
+                <field name="range_from"/>
+                <field name="range_to"/>
+                <field name="ee_rate"/>
+                <field name="er_rate"/>
+                <field name="salary_base_cap"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ph_hdmf_table_form" model="ir.ui.view">
+        <field name="name">ph.hdmf.table.form</field>
+        <field name="model">ph.hdmf.table</field>
+        <field name="arch" type="xml">
+            <form string="HDMF (Pag-IBIG) Contribution Bracket">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="range_from"/>
+                            <field name="range_to"/>
+                            <field name="effective_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                        <group>
+                            <field name="ee_rate"/>
+                            <field name="er_rate"/>
+                            <field name="salary_base_cap"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ph_hdmf_table" model="ir.actions.act_window">
+        <field name="name">HDMF (Pag-IBIG) Contribution Table</field>
+        <field name="res_model">ph.hdmf.table</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_help">Define an HDMF (Pag-IBIG) bracket</p>
+            <p>Configure the employee/employer rate and the maximum mandatory (Monthly Fund Salary Base) contribution cap.</p>
+        </field>
+    </record>
+
+</odoo>

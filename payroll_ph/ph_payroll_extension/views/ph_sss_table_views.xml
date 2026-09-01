@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ph_sss_table_list" model="ir.ui.view">
+        <field name="name">ph.sss.table.list</field>
+        <field name="model">ph.sss.table</field>
+        <field name="arch" type="xml">
+            <list string="SSS Contribution Table" editable="bottom">
+                <field name="range_from"/>
+                <field name="range_to"/>
+                <field name="monthly_salary_credit"/>
+                <field name="ee_regular_ss"/>
+                <field name="er_regular_ss"/>
+                <field name="ee_mpf"/>
+                <field name="er_mpf"/>
+                <field name="er_ec"/>
+                <field name="ee_total"/>
+                <field name="er_total"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ph_sss_table_form" model="ir.ui.view">
+        <field name="name">ph.sss.table.form</field>
+        <field name="model">ph.sss.table</field>
+        <field name="arch" type="xml">
+            <form string="SSS Contribution Bracket">
+                <sheet>
+                    <group>
+                        <group string="Salary Range">
+                            <field name="range_from"/>
+                            <field name="range_to"/>
+                            <field name="monthly_salary_credit"/>
+                            <field name="effective_date"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Regular SS">
+                            <field name="ee_regular_ss"/>
+                            <field name="er_regular_ss"/>
+                        </group>
+                        <group string="MPF / WISP">
+                            <field name="ee_mpf"/>
+                            <field name="er_mpf"/>
+                        </group>
+                        <group string="Employees' Compensation (EC)">
+                            <field name="er_ec"/>
+                        </group>
+                        <group string="Totals">
+                            <field name="ee_total"/>
+                            <field name="er_total"/>
+                            <field name="total_contribution"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ph_sss_table" model="ir.actions.act_window">
+        <field name="name">SSS Contribution Table</field>
+        <field name="res_model">ph.sss.table</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_help">Define an SSS contribution bracket</p>
+            <p>Configure the Regular SS, MPF/WISP and EC contribution amounts per salary bracket.</p>
+        </field>
+    </record>
+
+</odoo>

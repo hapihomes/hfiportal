@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Deliberately NOT noupdate: these formulas are module-controlled (admins
+    should customize rates via the SSS/PhilHealth/HDMF config tables and the
+    Structure's PH Pay Policy tab, not by hand-editing rule Python code).
+
+    NOTE: the values here are kept in sync with _PH_SALARY_RULE_FORMULAS in
+    models/ph_config.py, which is the actual authoritative source: it
+    force-writes these formulas on every module load (see
+    _ph_fix_salary_rule_formulas), because Odoo's XML data loader won't
+    overwrite a record that already existed under noupdate="1" in an
+    earlier version of this module, no matter what this file says. This
+    file only matters for a genuinely fresh install; if you change a
+    formula, change it in both places.
+
+    Each "inputs.CODE"/"categories.CODE" read is written using only
+    try/except and literal attribute/key access (no hasattr/getattr) so it
+    tolerates: a plain dict (code -> amount, or code -> input-line record),
+    or the classic wrapper object (dotted attribute access), and works
+    even when this build's rule sandbox doesn't expose hasattr/getattr.
+-->
+<odoo>
+
+    <record id="ph_rule_basic" model="hr.salary.rule">
+        <field name="name">Basic Salary</field>
+        <field name="code">BASIC</field>
+        <field name="sequence" eval="100"/>
+        <field name="category_id" ref="ph_category_basic"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Proration (full wage vs. half) is computed in Python from the
+             Structure's "PH Pay Frequency" setting; see hr_payslip.py. -->
+        <field name="amount_python_compute">try:
+    _v = inputs['BASICWAGE']
+except:
+    try:
+        _v = inputs.BASICWAGE
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_commission" model="hr.salary.rule">
+        <field name="name">Commission</field>
+        <field name="code">COMMISSION</field>
+        <field name="sequence" eval="110"/>
+        <field name="category_id" ref="ph_category_allow"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['COMMISSION']
+except:
+    try:
+        _v = inputs.COMMISSION
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_allow_taxable" model="hr.salary.rule">
+        <field name="name">Taxable Allowances</field>
+        <field name="code">ALLOWTAX</field>
+        <field name="sequence" eval="120"/>
+        <field name="category_id" ref="ph_category_allow"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['ALLOWTAX']
+except:
+    try:
+        _v = inputs.ALLOWTAX
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_allow_nontaxable" model="hr.salary.rule">
+        <field name="name">Non-Taxable Allowances</field>
+        <field name="code">ALLOWNONTAX</field>
+        <field name="sequence" eval="130"/>
+        <field name="category_id" ref="ph_category_allow"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['ALLOWNONTAX']
+except:
+    try:
+        _v = inputs.ALLOWNONTAX
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_overtime" model="hr.salary.rule">
+        <field name="name">Overtime Pay</field>
+        <field name="code">OVERTIME</field>
+        <field name="sequence" eval="140"/>
+        <field name="category_id" ref="ph_category_ot"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Computed in Python from worked-days hours matched against PH
+             Overtime Types (PH Payroll Settings > Overtime Types); see
+             hr_payslip.py _ph_get_overtime_value. -->
+        <field name="amount_python_compute">try:
+    _v = inputs['OVERTIME']
+except:
+    try:
+        _v = inputs.OVERTIME
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_gross" model="hr.salary.rule">
+        <field name="name">Gross Income</field>
+        <field name="code">GROSS</field>
+        <field name="sequence" eval="200"/>
+        <field name="category_id" ref="ph_category_gross"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _c0 = categories['PH_BASIC']
+except:
+    try:
+        _c0 = categories.PH_BASIC
+    except:
+        _c0 = 0.0
+try:
+    _c1 = categories['PH_ALLOW']
+except:
+    try:
+        _c1 = categories.PH_ALLOW
+    except:
+        _c1 = 0.0
+try:
+    _c2 = categories['PH_OT']
+except:
+    try:
+        _c2 = categories.PH_OT
+    except:
+        _c2 = 0.0
+result = (_c0 or 0.0) + (_c1 or 0.0) + (_c2 or 0.0)</field>
+    </record>
+
+    <record id="ph_rule_sss_ee" model="hr.salary.rule">
+        <field name="name">SSS Contribution - Employee Share (Regular SS + MPF)</field>
+        <field name="code">SSSEE</field>
+        <field name="sequence" eval="300"/>
+        <field name="category_id" ref="ph_category_sss_ee"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['SSSEE']
+except:
+    try:
+        _v = inputs.SSSEE
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_sss_er" model="hr.salary.rule">
+        <field name="name">SSS Contribution - Employer Share (Regular SS + MPF + EC)</field>
+        <field name="code">SSSER</field>
+        <field name="sequence" eval="310"/>
+        <field name="category_id" ref="ph_category_sss_er"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Employer share: informational only, visible in the backend
+             Salary Computation tab but not on the printed payslip. -->
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">try:
+    _v = inputs['SSSER']
+except:
+    try:
+        _v = inputs.SSSER
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_phic_ee" model="hr.salary.rule">
+        <field name="name">PhilHealth Contribution - Employee Share</field>
+        <field name="code">PHICEE</field>
+        <field name="sequence" eval="320"/>
+        <field name="category_id" ref="ph_category_phic_ee"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['PHICEE']
+except:
+    try:
+        _v = inputs.PHICEE
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_phic_er" model="hr.salary.rule">
+        <field name="name">PhilHealth Contribution - Employer Share</field>
+        <field name="code">PHICER</field>
+        <field name="sequence" eval="330"/>
+        <field name="category_id" ref="ph_category_phic_er"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Employer share: informational only, visible in the backend
+             Salary Computation tab but not on the printed payslip. -->
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">try:
+    _v = inputs['PHICER']
+except:
+    try:
+        _v = inputs.PHICER
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_hdmf_ee" model="hr.salary.rule">
+        <field name="name">HDMF (Pag-IBIG) Contribution - Employee Share</field>
+        <field name="code">HDMFEE</field>
+        <field name="sequence" eval="340"/>
+        <field name="category_id" ref="ph_category_hdmf_ee"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['HDMFEE']
+except:
+    try:
+        _v = inputs.HDMFEE
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_hdmf_er" model="hr.salary.rule">
+        <field name="name">HDMF (Pag-IBIG) Contribution - Employer Share</field>
+        <field name="code">HDMFER</field>
+        <field name="sequence" eval="350"/>
+        <field name="category_id" ref="ph_category_hdmf_er"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Employer share: informational only, visible in the backend
+             Salary Computation tab but not on the printed payslip. -->
+        <field name="appears_on_payslip" eval="False"/>
+        <field name="amount_python_compute">try:
+    _v = inputs['HDMFER']
+except:
+    try:
+        _v = inputs.HDMFER
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0</field>
+    </record>
+
+    <record id="ph_rule_sss_loan" model="hr.salary.rule">
+        <field name="name">SSS Loan Deduction</field>
+        <field name="code">SSSLOAN</field>
+        <field name="sequence" eval="400"/>
+        <field name="category_id" ref="ph_category_loans"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['SSSLOAN']
+except:
+    try:
+        _v = inputs.SSSLOAN
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_hdmf_loan" model="hr.salary.rule">
+        <field name="name">HDMF/Pag-IBIG Loan Deduction</field>
+        <field name="code">HDMFLOAN</field>
+        <field name="sequence" eval="410"/>
+        <field name="category_id" ref="ph_category_loans"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['HDMFLOAN']
+except:
+    try:
+        _v = inputs.HDMFLOAN
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_company_loan" model="hr.salary.rule">
+        <field name="name">Company Loan Deduction</field>
+        <field name="code">COMPANYLOAN</field>
+        <field name="sequence" eval="420"/>
+        <field name="category_id" ref="ph_category_loans"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['COMPANYLOAN']
+except:
+    try:
+        _v = inputs.COMPANYLOAN
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_salary_advance" model="hr.salary.rule">
+        <field name="name">Salary Advance Deduction</field>
+        <field name="code">SALARYADV</field>
+        <field name="sequence" eval="430"/>
+        <field name="category_id" ref="ph_category_loans"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _v = inputs['SALARYADV']
+except:
+    try:
+        _v = inputs.SALARYADV
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
+    <record id="ph_rule_net" model="hr.salary.rule">
+        <field name="name">Net Pay</field>
+        <field name="code">NET</field>
+        <field name="sequence" eval="999"/>
+        <field name="category_id" ref="ph_category_net"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <field name="amount_python_compute">try:
+    _c0 = categories['PH_GROSS']
+except:
+    try:
+        _c0 = categories.PH_GROSS
+    except:
+        _c0 = 0.0
+try:
+    _c1 = categories['PH_SSS_EE']
+except:
+    try:
+        _c1 = categories.PH_SSS_EE
+    except:
+        _c1 = 0.0
+try:
+    _c2 = categories['PH_PHIC_EE']
+except:
+    try:
+        _c2 = categories.PH_PHIC_EE
+    except:
+        _c2 = 0.0
+try:
+    _c3 = categories['PH_HDMF_EE']
+except:
+    try:
+        _c3 = categories.PH_HDMF_EE
+    except:
+        _c3 = 0.0
+try:
+    _c4 = categories['PH_LOANS']
+except:
+    try:
+        _c4 = categories.PH_LOANS
+    except:
+        _c4 = 0.0
+result = (_c0 or 0.0) + (_c1 or 0.0) + (_c2 or 0.0) + (_c3 or 0.0) + (_c4 or 0.0)</field>
+    </record>
+
+</odoo>

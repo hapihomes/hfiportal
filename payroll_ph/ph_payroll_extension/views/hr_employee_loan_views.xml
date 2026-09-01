@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_hr_employee_loan_list" model="ir.ui.view">
+        <field name="name">hr.employee.loan.list</field>
+        <field name="model">hr.employee.loan</field>
+        <field name="arch" type="xml">
+            <list string="Employee Loans" decoration-muted="state == 'cancelled'" decoration-success="state == 'done'">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="loan_type_id"/>
+                <field name="date_granted"/>
+                <field name="principal_amount"/>
+                <field name="monthly_amortization"/>
+                <field name="balance" sum="Total Outstanding"/>
+                <field name="payment_count"/>
+                <field name="remaining_installments"/>
+                <field name="estimated_end_date"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state == 'running'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_hr_employee_loan_form" model="ir.ui.view">
+        <field name="name">hr.employee.loan.form</field>
+        <field name="model">hr.employee.loan</field>
+        <field name="arch" type="xml">
+            <form string="Employee Loan">
+                <header>
+                    <button name="action_confirm" type="object" string="Confirm" class="oe_highlight" invisible="state != 'draft'"/>
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('draft', 'running')"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft" invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,running,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="loan_type_id"/>
+                            <field name="date_granted"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="principal_amount"/>
+                            <field name="monthly_amortization"/>
+                            <field name="number_of_installments"/>
+                            <field name="balance"/>
+                            <field name="total_paid"/>
+                            <field name="payment_count"/>
+                            <field name="remaining_installments"/>
+                            <field name="estimated_end_date"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Payment History" name="payment_history">
+                            <field name="payment_ids" readonly="1">
+                                <list string="Payments">
+                                    <field name="date"/>
+                                    <field name="payslip_id"/>
+                                    <field name="amount"/>
+                                    <field name="balance_after"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!--
+        No custom <search> view here: a hand-written one for this model
+        failed Odoo's view validation on this build with no detailed error
+        surfaced, so we rely on Odoo's auto-generated default search view
+        instead (still fully filterable/groupable from the search bar UI).
+    -->
+
+    <record id="action_hr_employee_loan" model="ir.actions.act_window">
+        <field name="name">Employee Loans</field>
+        <field name="res_model">hr.employee.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_help">Create a new employee loan</p>
+            <p>Track government loans (SSS, HDMF/Pag-IBIG) and internal company loans (Emergency Loan, Salary Advance).</p>
+        </field>
+    </record>
+
+</odoo>

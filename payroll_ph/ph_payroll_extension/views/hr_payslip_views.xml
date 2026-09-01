@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The Commission field and Allowances tab on the payslip form are attached
+    dynamically by post_init_hook (see __init__.py). A static <record> here
+    would need to hard-code the base hr.payslip form view's external ID,
+    which has already proven to vary/not exist as expected across Odoo
+    Enterprise versions and customizations in this project. The dynamic hook
+    finds the base view by (model, type) instead, and degrades gracefully
+    (with a logged warning) if it can't find a match, rather than blocking
+    module installation.
+-->
+<odoo>
+</odoo>

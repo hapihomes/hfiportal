@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="loan_type_sss" model="ph.loan.type">
+        <field name="name">SSS Loan</field>
+        <field name="code">SSSLOAN</field>
+        <field name="sequence" eval="10"/>
+        <field name="is_government" eval="True"/>
+        <field name="input_type_id" ref="input_type_sss_loan"/>
+    </record>
+
+    <record id="loan_type_hdmf" model="ph.loan.type">
+        <field name="name">HDMF / Pag-IBIG Loan</field>
+        <field name="code">HDMFLOAN</field>
+        <field name="sequence" eval="20"/>
+        <field name="is_government" eval="True"/>
+        <field name="input_type_id" ref="input_type_hdmf_loan"/>
+    </record>
+
+    <record id="loan_type_company" model="ph.loan.type">
+        <field name="name">Emergency / Company Loan</field>
+        <field name="code">COMPANYLOAN</field>
+        <field name="sequence" eval="30"/>
+        <field name="is_government" eval="False"/>
+        <field name="input_type_id" ref="input_type_company_loan"/>
+    </record>
+
+    <record id="loan_type_salary_advance" model="ph.loan.type">
+        <field name="name">Salary Advance</field>
+        <field name="code">SALARYADV</field>
+        <field name="sequence" eval="40"/>
+        <field name="is_government" eval="False"/>
+        <field name="input_type_id" ref="input_type_salary_advance"/>
+    </record>
+
+</odoo>

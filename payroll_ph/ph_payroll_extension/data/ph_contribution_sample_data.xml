@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    SAMPLE / PLACEHOLDER DATA ONLY.
+
+    The brackets and rates below are simplified, illustrative figures meant
+    to demonstrate the SSS / PhilHealth / HDMF configuration screens and let
+    the module be tested end-to-end out of the box. They are NOT guaranteed
+    to match the current official SSS Circular, PhilHealth Circular or
+    Pag-IBIG (HDMF) Circular. Before running live payroll, an administrator
+    must review and update these records under PH Payroll Settings to match
+    the currently effective government schedules.
+-->
+<odoo noupdate="1">
+
+    <!-- Sample SSS brackets -->
+    <record id="sss_bracket_1" model="ph.sss.table">
+        <field name="range_from" eval="0"/>
+        <field name="range_to" eval="4999.99"/>
+        <field name="monthly_salary_credit" eval="5000"/>
+        <field name="ee_regular_ss" eval="250"/>
+        <field name="er_regular_ss" eval="500"/>
+        <field name="ee_mpf" eval="0"/>
+        <field name="er_mpf" eval="0"/>
+        <field name="er_ec" eval="10"/>
+    </record>
+
+    <record id="sss_bracket_2" model="ph.sss.table">
+        <field name="range_from" eval="5000"/>
+        <field name="range_to" eval="14999.99"/>
+        <field name="monthly_salary_credit" eval="15000"/>
+        <field name="ee_regular_ss" eval="675"/>
+        <field name="er_regular_ss" eval="1350"/>
+        <field name="ee_mpf" eval="0"/>
+        <field name="er_mpf" eval="0"/>
+        <field name="er_ec" eval="10"/>
+    </record>
+
+    <record id="sss_bracket_3" model="ph.sss.table">
+        <field name="range_from" eval="15000"/>
+        <field name="range_to" eval="19999.99"/>
+        <field name="monthly_salary_credit" eval="20000"/>
+        <field name="ee_regular_ss" eval="900"/>
+        <field name="er_regular_ss" eval="1800"/>
+        <field name="ee_mpf" eval="0"/>
+        <field name="er_mpf" eval="0"/>
+        <field name="er_ec" eval="30"/>
+    </record>
+
+    <record id="sss_bracket_4" model="ph.sss.table">
+        <field name="range_from" eval="20000"/>
+        <field name="range_to" eval="29999.99"/>
+        <field name="monthly_salary_credit" eval="25000"/>
+        <field name="ee_regular_ss" eval="900"/>
+        <field name="er_regular_ss" eval="1800"/>
+        <field name="ee_mpf" eval="112.50"/>
+        <field name="er_mpf" eval="225"/>
+        <field name="er_ec" eval="30"/>
+    </record>
+
+    <record id="sss_bracket_5" model="ph.sss.table">
+        <field name="range_from" eval="30000"/>
+        <field name="range_to" eval="999999999.99"/>
+        <field name="monthly_salary_credit" eval="30000"/>
+        <field name="ee_regular_ss" eval="900"/>
+        <field name="er_regular_ss" eval="1800"/>
+        <field name="ee_mpf" eval="225"/>
+        <field name="er_mpf" eval="450"/>
+        <field name="er_ec" eval="30"/>
+    </record>
+
+    <!-- Sample PhilHealth configuration -->
+    <record id="philhealth_config_sample" model="ph.philhealth.config">
+        <field name="name">PhilHealth Contribution Rate (sample)</field>
+        <field name="premium_rate" eval="5.0"/>
+        <field name="ee_share_rate" eval="50.0"/>
+        <field name="salary_floor" eval="10000"/>
+        <field name="salary_ceiling" eval="100000"/>
+    </record>
+
+    <!-- Sample HDMF / Pag-IBIG brackets -->
+    <record id="hdmf_bracket_1" model="ph.hdmf.table">
+        <field name="range_from" eval="0"/>
+        <field name="range_to" eval="1499.99"/>
+        <field name="ee_rate" eval="1.0"/>
+        <field name="er_rate" eval="2.0"/>
+        <field name="salary_base_cap" eval="10000"/>
+    </record>
+
+    <record id="hdmf_bracket_2" model="ph.hdmf.table">
+        <field name="range_from" eval="1500"/>
+        <field name="range_to" eval="999999999.99"/>
+        <field name="ee_rate" eval="2.0"/>
+        <field name="er_rate" eval="2.0"/>
+        <field name="salary_base_cap" eval="10000"/>
+    </record>
+
+</odoo>

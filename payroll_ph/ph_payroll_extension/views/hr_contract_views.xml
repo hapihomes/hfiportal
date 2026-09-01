@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    The "PH Recurring Allowances" tab on the Contract (hr.version) form is
+    attached dynamically by post_init_hook (see __init__.py), rather than
+    hard-coding the base contract form view's external ID here. That turned
+    out not to be 'hr_contract.hr_contract_view_form' in this Odoo build:
+    the Contract model itself is 'hr.version', not 'hr.contract'. The
+    dynamic hook finds the base view by (model, type) instead, and degrades
+    gracefully (with a logged warning) if it can't find a match, rather than
+    blocking module installation.
+-->
+<odoo>
+</odoo>

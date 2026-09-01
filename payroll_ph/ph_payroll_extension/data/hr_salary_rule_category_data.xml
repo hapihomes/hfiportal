@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ph_category_basic" model="hr.salary.rule.category">
+        <field name="name">PH Basic Salary</field>
+        <field name="code">PH_BASIC</field>
+    </record>
+
+    <record id="ph_category_allow" model="hr.salary.rule.category">
+        <field name="name">PH Allowances &amp; Commission</field>
+        <field name="code">PH_ALLOW</field>
+    </record>
+
+    <record id="ph_category_ot" model="hr.salary.rule.category">
+        <field name="name">PH Overtime</field>
+        <field name="code">PH_OT</field>
+    </record>
+
+    <record id="ph_category_gross" model="hr.salary.rule.category">
+        <field name="name">PH Gross Income</field>
+        <field name="code">PH_GROSS</field>
+    </record>
+
+    <record id="ph_category_govt" model="hr.salary.rule.category">
+        <field name="name">PH Government Contributions</field>
+        <field name="code">PH_GOVT</field>
+    </record>
+
+    <record id="ph_category_sss_ee" model="hr.salary.rule.category">
+        <field name="name">SSS - Employee Share</field>
+        <field name="code">PH_SSS_EE</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_sss_er" model="hr.salary.rule.category">
+        <field name="name">SSS - Employer Share</field>
+        <field name="code">PH_SSS_ER</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_phic_ee" model="hr.salary.rule.category">
+        <field name="name">PhilHealth - Employee Share</field>
+        <field name="code">PH_PHIC_EE</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_phic_er" model="hr.salary.rule.category">
+        <field name="name">PhilHealth - Employer Share</field>
+        <field name="code">PH_PHIC_ER</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_hdmf_ee" model="hr.salary.rule.category">
+        <field name="name">HDMF (Pag-IBIG) - Employee Share</field>
+        <field name="code">PH_HDMF_EE</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_hdmf_er" model="hr.salary.rule.category">
+        <field name="name">HDMF (Pag-IBIG) - Employer Share</field>
+        <field name="code">PH_HDMF_ER</field>
+        <field name="parent_id" ref="ph_category_govt"/>
+    </record>
+
+    <record id="ph_category_loans" model="hr.salary.rule.category">
+        <field name="name">Loans &amp; Salary Advances</field>
+        <field name="code">PH_LOANS</field>
+    </record>
+
+    <record id="ph_category_net" model="hr.salary.rule.category">
+        <field name="name">PH Net Pay</field>
+        <field name="code">PH_NET</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="ph_structure_type_employee" model="hr.payroll.structure.type">
+        <field name="name">Philippines Employee</field>
+    </record>
+
+    <record id="ph_structure_regular_pay" model="hr.payroll.structure">
+        <field name="name">Philippines Regular Pay</field>
+        <field name="type_id" ref="ph_structure_type_employee"/>
+    </record>
+
+</odoo>

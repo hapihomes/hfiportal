@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="allowance_type_rice" model="ph.allowance.type">
+        <field name="name">Rice Allowance</field>
+        <field name="code">RICE</field>
+        <field name="sequence" eval="10"/>
+        <field name="is_taxable" eval="False"/>
+    </record>
+
+    <record id="allowance_type_clothing" model="ph.allowance.type">
+        <field name="name">Clothing Allowance</field>
+        <field name="code">CLOTHING</field>
+        <field name="sequence" eval="20"/>
+        <field name="is_taxable" eval="False"/>
+    </record>
+
+    <record id="allowance_type_laundry" model="ph.allowance.type">
+        <field name="name">Laundry Allowance</field>
+        <field name="code">LAUNDRY</field>
+        <field name="sequence" eval="30"/>
+        <field name="is_taxable" eval="False"/>
+    </record>
+
+    <record id="allowance_type_transportation" model="ph.allowance.type">
+        <field name="name">Transportation Allowance</field>
+        <field name="code">TRANSPO</field>
+        <field name="sequence" eval="40"/>
+        <field name="is_taxable" eval="True"/>
+    </record>
+
+    <record id="allowance_type_meal" model="ph.allowance.type">
+        <field name="name">Meal Allowance</field>
+        <field name="code">MEAL</field>
+        <field name="sequence" eval="50"/>
+        <field name="is_taxable" eval="False"/>
+    </record>
+
+</odoo>

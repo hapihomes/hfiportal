@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Standalone content template with the PH Allowance / Commission /
+        Loan breakdown. This is NOT wired into the standard payslip report
+        via a static inherit_id (the exact QWeb template id used by the
+        installed hr_payroll version can vary), it is instead attached
+        safely at runtime by the post_init_hook (see __init__.py), which
+        only creates the inheriting view if the expected base report
+        template actually exists.
+    -->
+    <template id="ph_allowance_loan_breakdown" name="PH Allowance &amp; Loan Breakdown">
+        <div t-if="o.allowance_line_ids or o.commission_amount" class="mt-3">
+            <h4>Allowances &amp; Commission</h4>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Taxable</th>
+                        <th class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-if="o.commission_amount">
+                        <td>Commission</td>
+                        <td>Yes</td>
+                        <td class="text-right">
+                            <span t-esc="o.commission_amount"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                        </td>
+                    </tr>
+                    <tr t-foreach="o.allowance_line_ids" t-as="allowance_line">
+                        <td><span t-field="allowance_line.name"/></td>
+                        <td><span t-esc="'Yes' if allowance_line.is_taxable else 'No'"/></td>
+                        <td class="text-right">
+                            <span t-esc="allowance_line.amount"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div t-if="o.overtime_hours" class="mt-3">
+            <h4>Overtime</h4>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th class="text-right">Hours</th>
+                        <th class="text-right">Rate</th>
+                        <th class="text-right">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="o._ph_get_overtime_hours().items()" t-as="ot_item">
+                        <td><span t-esc="ot_item[0].name"/></td>
+                        <td class="text-right"><span t-esc="ot_item[1]"/></td>
+                        <td class="text-right"><span t-esc="ot_item[0].multiplier"/>%</td>
+                        <td class="text-right">
+                            <span t-esc="ot_item[1] * o._ph_get_hourly_rate() * ot_item[0].multiplier / 100.0"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div t-if="o.line_ids.filtered(lambda line: line.category_id.code == 'PH_LOANS')" class="mt-3">
+            <h4>Loan Deductions</h4>
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Loan</th>
+                        <th class="text-right">Deduction</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="o.line_ids.filtered(lambda line: line.category_id.code == 'PH_LOANS')" t-as="loan_line">
+                        <td><span t-field="loan_line.name"/></td>
+                        <td class="text-right">
+                            <span t-esc="abs(loan_line.total)"
+                                  t-options='{"widget": "monetary", "display_currency": o.company_id.currency_id}'/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </template>
+
+</odoo>

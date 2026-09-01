@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        This menu is created without a parent. The post_init_hook (see
+        __init__.py) reparents it under the main "Payroll" app menu once the
+        module is installed, without hard-coding hr_payroll's internal
+        root-menu external ID (which is not part of any stable public API).
+    -->
+    <menuitem id="menu_ph_payroll_root" name="PH Payroll Settings" sequence="90"
+              groups="ph_payroll_extension.group_ph_payroll_user"/>
+
+    <menuitem id="menu_ph_payroll_contributions" name="Government Contributions"
+              parent="menu_ph_payroll_root" sequence="10"/>
+
+    <menuitem id="menu_ph_sss_table" name="SSS Contribution Table"
+              parent="menu_ph_payroll_contributions" action="action_ph_sss_table" sequence="10"/>
+
+    <menuitem id="menu_ph_philhealth_config" name="PhilHealth Configuration"
+              parent="menu_ph_payroll_contributions" action="action_ph_philhealth_config" sequence="20"/>
+
+    <menuitem id="menu_ph_hdmf_table" name="HDMF (Pag-IBIG) Contribution Table"
+              parent="menu_ph_payroll_contributions" action="action_ph_hdmf_table" sequence="30"/>
+
+    <menuitem id="menu_ph_payroll_loans" name="Loans"
+              parent="menu_ph_payroll_root" sequence="20"/>
+
+    <menuitem id="menu_hr_employee_loan" name="Employee Loans"
+              parent="menu_ph_payroll_loans" action="action_hr_employee_loan" sequence="10"/>
+
+    <menuitem id="menu_ph_loan_type" name="Loan Types"
+              parent="menu_ph_payroll_loans" action="action_ph_loan_type" sequence="20"/>
+
+    <menuitem id="menu_ph_payroll_allowances" name="Allowances"
+              parent="menu_ph_payroll_root" sequence="30"/>
+
+    <menuitem id="menu_ph_allowance_type" name="Allowance Types"
+              parent="menu_ph_payroll_allowances" action="action_ph_allowance_type" sequence="10"/>
+
+    <menuitem id="menu_ph_payroll_overtime" name="Overtime"
+              parent="menu_ph_payroll_root" sequence="40"/>
+
+    <menuitem id="menu_ph_overtime_type" name="Overtime Types"
+              parent="menu_ph_payroll_overtime" action="action_ph_overtime_type" sequence="10"/>
+
+</odoo>
