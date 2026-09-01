@@ -1,5 +1,5 @@
 from . import models
-from .models.ph_config import configure_ph_extension
+from . models.ph_config import configure_ph_extension
 
 
 def post_init_hook(env):
