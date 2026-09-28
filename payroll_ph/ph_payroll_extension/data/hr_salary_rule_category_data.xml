@@ -67,6 +67,11 @@
         <field name="code">PH_LOANS</field>
     </record>
 
+    <record id="ph_category_late" model="hr.salary.rule.category">
+        <field name="name">Tardiness / Late Deduction</field>
+        <field name="code">PH_LATE</field>
+    </record>
+
     <record id="ph_category_net" model="hr.salary.rule.category">
         <field name="name">PH Net Pay</field>
         <field name="code">PH_NET</field>

@@ -373,6 +373,30 @@ except:
 result = -result</field>
     </record>
 
+    <record id="ph_rule_late_deduction" model="hr.salary.rule">
+        <field name="name">Late/Tardiness Deduction</field>
+        <field name="code">LATEDED</field>
+        <field name="sequence" eval="440"/>
+        <field name="category_id" ref="ph_category_late"/>
+        <field name="struct_id" ref="ph_structure_regular_pay"/>
+        <field name="amount_select">code</field>
+        <!-- Computed in Python from hr.attendance check-ins matched against
+             the employee's assigned PH Work Schedule; see hr_attendance.py
+             and hr_payslip.py _ph_get_late_deduction_value. -->
+        <field name="amount_python_compute">try:
+    _v = inputs['LATEDED']
+except:
+    try:
+        _v = inputs.LATEDED
+    except:
+        _v = 0.0
+try:
+    result = _v.amount
+except:
+    result = _v or 0.0
+result = -result</field>
+    </record>
+
     <record id="ph_rule_net" model="hr.salary.rule">
         <field name="name">Net Pay</field>
         <field name="code">NET</field>
@@ -415,7 +439,14 @@ except:
         _c4 = categories.PH_LOANS
     except:
         _c4 = 0.0
-result = (_c0 or 0.0) + (_c1 or 0.0) + (_c2 or 0.0) + (_c3 or 0.0) + (_c4 or 0.0)</field>
+try:
+    _c5 = categories['PH_LATE']
+except:
+    try:
+        _c5 = categories.PH_LATE
+    except:
+        _c5 = 0.0
+result = (_c0 or 0.0) + (_c1 or 0.0) + (_c2 or 0.0) + (_c3 or 0.0) + (_c4 or 0.0) + (_c5 or 0.0)</field>
     </record>
 
 </odoo>

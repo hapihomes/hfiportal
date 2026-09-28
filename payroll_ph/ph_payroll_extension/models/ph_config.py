@@ -131,7 +131,9 @@ _PH_SALARY_RULE_FORMULAS = {
     'ph_rule_hdmf_loan': _ph_input_code('HDMFLOAN', negate=True),
     'ph_rule_company_loan': _ph_input_code('COMPANYLOAN', negate=True),
     'ph_rule_salary_advance': _ph_input_code('SALARYADV', negate=True),
-    'ph_rule_net': _ph_category_sum('PH_GROSS', 'PH_SSS_EE', 'PH_PHIC_EE', 'PH_HDMF_EE', 'PH_LOANS'),
+    'ph_rule_late_deduction': _ph_input_code('LATEDED', negate=True),
+    'ph_rule_net': _ph_category_sum(
+        'PH_GROSS', 'PH_SSS_EE', 'PH_PHIC_EE', 'PH_HDMF_EE', 'PH_LOANS', 'PH_LATE'),
 }
 
 # Employer-share rules: informational only, kept out of the printed payslip
@@ -307,3 +309,41 @@ def configure_ph_extension(env):
                 'ph_payroll_extension: failed to attach the payslip report '
                 'addendum. The rest of the module still works; this only '
                 'affects the printed PDF. See traceback below.', exc_info=True)
+
+    # 6. PH Work Schedule field on the Contract (hr.version) form.
+    _attach_inherited_view(
+        env, 'view_hr_version_form_ph_schedule_inherit', 'hr.version',
+        '<data>'
+        '<xpath expr="//notebook" position="inside">'
+        '<page string="PH Work Schedule" name="ph_work_schedule">'
+        '<group>'
+        '<field name="ph_work_schedule_id"/>'
+        '</group>'
+        '<p class="text-muted">The assigned shift\'s Time In and grace period '
+        'determine when a clock-in under Attendances counts as late and how '
+        'much is deducted from payroll.</p>'
+        '</page>'
+        '</xpath>'
+        '</data>',
+        [('model', '=', 'hr.version'), ('type', '=', 'form'), ('inherit_id', '=', False)],
+    )
+
+    # 7. Lateness fields on the Attendance form (best-effort: hr.attendance's
+    # form layout isn't guaranteed to have a <sheet> in every build, so this
+    # silently no-ops if it doesn't -- the standalone "Late Attendance"
+    # report under PH Payroll Settings is the reliable way to see this data
+    # either way).
+    _attach_inherited_view(
+        env, 'view_hr_attendance_form_ph_inherit', 'hr.attendance',
+        '<data>'
+        '<xpath expr="//sheet" position="inside">'
+        '<group string="PH Lateness">'
+        '<field name="ph_scheduled_time_in" widget="float_time"/>'
+        '<field name="ph_late_minutes"/>'
+        '<field name="ph_is_late"/>'
+        '<field name="ph_late_deduction"/>'
+        '</group>'
+        '</xpath>'
+        '</data>',
+        [('model', '=', 'hr.attendance'), ('type', '=', 'form'), ('inherit_id', '=', False)],
+    )

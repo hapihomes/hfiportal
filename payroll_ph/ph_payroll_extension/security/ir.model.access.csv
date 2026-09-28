@@ -19,3 +19,5 @@ access_ph_contract_allowance_line_user,ph.contract.allowance.line.user,model_ph_
 access_ph_contract_allowance_line_manager,ph.contract.allowance.line.manager,model_ph_contract_allowance_line,group_ph_payroll_manager,1,1,1,1
 access_ph_overtime_type_user,ph.overtime.type.user,model_ph_overtime_type,group_ph_payroll_user,1,0,0,0
 access_ph_overtime_type_manager,ph.overtime.type.manager,model_ph_overtime_type,group_ph_payroll_manager,1,1,1,1
+access_ph_work_schedule_user,ph.work.schedule.user,model_ph_work_schedule,group_ph_payroll_user,1,0,0,0
+access_ph_work_schedule_manager,ph.work.schedule.manager,model_ph_work_schedule,group_ph_payroll_manager,1,1,1,1

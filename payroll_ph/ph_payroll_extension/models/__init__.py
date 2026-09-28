@@ -8,6 +8,8 @@ from . import ph_allowance_type
 from . import ph_payslip_allowance_line
 from . import ph_contract_allowance_line
 from . import ph_overtime_type
+from . import ph_work_schedule
 from . import hr_contract
+from . import hr_attendance
 from . import hr_payroll_structure
 from . import hr_payslip

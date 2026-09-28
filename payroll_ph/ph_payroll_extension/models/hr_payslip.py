@@ -1,4 +1,6 @@
 import logging
+from datetime import datetime
+from datetime import time as dtime
 
 from odoo import Command, api, fields, models
 
@@ -155,6 +157,23 @@ class HrPayslip(models.Model):
                 values[code] = values.get(code, 0.0) + due
         return values
 
+    def _ph_get_late_deduction_value(self):
+        """Return {'LATEDED': amount}, summing this employee's Late Deduction
+        (see hr_attendance.py _compute_ph_lateness) for every check-in that
+        falls within this payslip's period, or {} if there's none.
+        """
+        self.ensure_one()
+        if not self.employee_id or not self.date_from or not self.date_to:
+            return {}
+        attendances = self.env['hr.attendance'].sudo().search([
+            ('employee_id', '=', self.employee_id.id),
+            ('ph_is_late', '=', True),
+            ('check_in', '>=', datetime.combine(self.date_from, dtime.min)),
+            ('check_in', '<=', datetime.combine(self.date_to, dtime.max)),
+        ])
+        total = sum(attendances.mapped('ph_late_deduction'))
+        return {'LATEDED': total} if total else {}
+
     def _ph_get_government_contribution_values(self):
         """Return {input_code: amount} for the SSS/PhilHealth/HDMF employee
         and employer shares, based on the contract's full monthly wage and
@@ -290,6 +309,8 @@ class HrPayslip(models.Model):
         for code, amount in self._ph_get_government_contribution_values().items():
             values[code] = values.get(code, 0.0) + amount
         for code, amount in self._ph_get_loan_deduction_values().items():
+            values[code] = values.get(code, 0.0) + amount
+        for code, amount in self._ph_get_late_deduction_value().items():
             values[code] = values.get(code, 0.0) + amount
         return values
 

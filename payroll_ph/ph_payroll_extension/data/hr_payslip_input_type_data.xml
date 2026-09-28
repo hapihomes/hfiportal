@@ -76,4 +76,9 @@
         <field name="code">HDMFER</field>
     </record>
 
+    <record id="input_type_late_deduction" model="hr.payslip.input.type">
+        <field name="name">Late/Tardiness Deduction</field>
+        <field name="code">LATEDED</field>
+    </record>
+
 </odoo>

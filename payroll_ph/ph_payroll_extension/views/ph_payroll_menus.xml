@@ -43,4 +43,13 @@
     <menuitem id="menu_ph_overtime_type" name="Overtime Types"
               parent="menu_ph_payroll_overtime" action="action_ph_overtime_type" sequence="10"/>
 
+    <menuitem id="menu_ph_payroll_attendance" name="Attendance &amp; Lateness"
+              parent="menu_ph_payroll_root" sequence="50"/>
+
+    <menuitem id="menu_ph_work_schedule" name="Work Schedules"
+              parent="menu_ph_payroll_attendance" action="action_ph_work_schedule" sequence="10"/>
+
+    <menuitem id="menu_ph_late_attendance" name="Late Attendance"
+              parent="menu_ph_payroll_attendance" action="action_ph_late_attendance" sequence="20"/>
+
 </odoo>

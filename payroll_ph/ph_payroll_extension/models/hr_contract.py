@@ -11,6 +11,22 @@ class HrContract(models.Model):
         'ph.contract.allowance.line', 'contract_id', string='Recurring PH Allowances',
         help='Taxable/non-taxable allowances that are automatically copied onto every new payslip for this contract.')
 
+    ph_work_schedule_id = fields.Many2one(
+        'ph.work.schedule', string='Work Schedule',
+        help="This employee's assigned shift. Used to determine when a clock-in under "
+             'Attendances counts as late and how much is deducted from payroll.')
+
+    def _get_ph_hourly_rate(self):
+        """Hourly rate used for the Late Deduction (see hr_attendance.py):
+        contract wage divided by the assigned Work Schedule's Standard
+        Monthly Hours, defaulting to 208 (8h x 26 days) if no schedule is set.
+        """
+        self.ensure_one()
+        divisor = (self.ph_work_schedule_id and self.ph_work_schedule_id.standard_monthly_hours) or 208.0
+        if not divisor:
+            return 0.0
+        return self.wage / divisor
+
     def _get_ph_sss_contribution(self, wage=None):
         """Return the SSS (Regular SS, MPF/WISP, EC) contribution breakdown.
         Called from the PH salary rules with the actual basic salary of the

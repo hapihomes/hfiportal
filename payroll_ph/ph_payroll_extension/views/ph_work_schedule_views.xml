@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ph_work_schedule_list" model="ir.ui.view">
+        <field name="name">ph.work.schedule.list</field>
+        <field name="model">ph.work.schedule</field>
+        <field name="arch" type="xml">
+            <list string="Work Schedules" editable="bottom">
+                <field name="name"/>
+                <field name="time_in" widget="float_time"/>
+                <field name="time_out" widget="float_time"/>
+                <field name="break_duration"/>
+                <field name="working_hours"/>
+                <field name="grace_period_minutes"/>
+                <field name="standard_monthly_hours"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ph_work_schedule_form" model="ir.ui.view">
+        <field name="name">ph.work.schedule.form</field>
+        <field name="model">ph.work.schedule</field>
+        <field name="arch" type="xml">
+            <form string="Work Schedule">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="e.g. Morning Shift"/></h1>
+                    </div>
+                    <group>
+                        <group string="Shift Hours">
+                            <field name="time_in" widget="float_time"/>
+                            <field name="time_out" widget="float_time"/>
+                            <field name="break_duration"/>
+                            <field name="working_hours" readonly="1"/>
+                        </group>
+                        <group string="Lateness &amp; Rate">
+                            <field name="grace_period_minutes"/>
+                            <field name="standard_monthly_hours"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ph_work_schedule" model="ir.actions.act_window">
+        <field name="name">Work Schedules</field>
+        <field name="res_model">ph.work.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smart_help">Define a work schedule / shift</p>
+            <p>Set the shift's Time In, Time Out and unpaid break, plus the grace period
+               and hourly-rate divisor used to compute late deductions. Assign it to an
+               employee under their Contract's "PH Work Schedule" tab.</p>
+        </field>
+    </record>
+
+</odoo>

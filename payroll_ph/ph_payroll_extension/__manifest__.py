@@ -2,7 +2,8 @@
     'name': 'Philippine Payroll Extension',
     'version': '19.0.1.0.0',
     'category': 'Human Resources/Payroll',
-    'summary': 'Philippine payroll localization: SSS, PhilHealth, HDMF, loans, allowances and commissions',
+    'summary': 'Philippine payroll localization: SSS, PhilHealth, HDMF, loans, allowances, '
+               'commissions and shift-based late deductions',
     'description': """
 Philippine Payroll Extension
 =============================
@@ -18,6 +19,10 @@ computation logic:
   (Rice, Clothing, Laundry, Transportation, ...) that feed into gross pay.
 * A manual Commission field on the payslip that feeds into taxable income
   and gross pay.
+* Configurable Work Schedules (shift Time In/Out, unpaid break, grace period)
+  assigned per employee Contract, with automatic late-arrival detection from
+  the Attendances app and a per-hour payroll deduction once the grace period
+  is exceeded.
 * Pre-configured salary rule categories, salary rules and a sample
   "Philippines Employee" payroll structure.
 
@@ -29,7 +34,7 @@ under PH Payroll Settings accordingly.
 """,
     'author': 'HapiHomes',
     'license': 'LGPL-3',
-    'depends': ['hr_payroll', 'hr'],
+    'depends': ['hr_payroll', 'hr', 'hr_attendance'],
     'data': [
         'security/security.xml',
         'security/ir.model.access.csv',
@@ -51,6 +56,8 @@ under PH Payroll Settings accordingly.
         'views/hr_contract_views.xml',
         'views/hr_payslip_views.xml',
         'views/report_payslip_templates.xml',
+        'views/ph_work_schedule_views.xml',
+        'views/hr_attendance_views.xml',
         'views/ph_payroll_menus.xml',
     ],
     'post_init_hook': 'post_init_hook',
