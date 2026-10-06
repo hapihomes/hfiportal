@@ -1,4 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_stock_ageing_report_user,stock.ageing.report user,model_stock_ageing_report,stock.group_stock_user,1,0,0,0
-access_stock_ageing_report_manager,stock.ageing.report manager,model_stock_ageing_report,stock.group_stock_manager,1,0,0,0
+access_stock_ageing_report_manager,stock.ageing.report manager,model_stock_ageing_report,stock.group_stock_manager,1,1,1,1
 access_stock_ageing_wizard_user,stock.ageing.wizard user,model_stock_ageing_wizard,stock.group_stock_user,1,1,1,1
+access_stock_ageing_wizard_manager,stock.ageing.wizard manager,model_stock_ageing_wizard,stock.group_stock_manager,1,1,1,1
