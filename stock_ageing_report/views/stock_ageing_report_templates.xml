@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Paper format: A4 landscape so all the columns fit on the page -->
+    <record id="paperformat_stock_ageing" model="report.paperformat">
+        <field name="name">Stock Ageing (Landscape)</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">20</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_spacing">15</field>
+    </record>
+
+    <!-- Report action: links the model, the QWeb template (report_name) and the paper format.
+         The data for the template comes from models/stock_ageing_report_pdf.py -->
+    <record id="action_report_stock_ageing" model="ir.actions.report">
+        <field name="name">Ageing Products</field>
+        <field name="model">stock.ageing.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_ageing_report.report_stock_ageing</field>
+        <field name="report_file">stock_ageing_report.report_stock_ageing</field>
+        <field name="paperformat_id" ref="paperformat_stock_ageing"/>
+    </record>
+
+    <!-- QWeb template: header + one table row per location/product line.
+         `lines` is the list built by _get_report_values(). -->
+    <template id="report_stock_ageing">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <h3>Ageing Products</h3>
+                    <table class="table table-sm o_main_table" style="font-size: 11px;">
+                        <thead>
+                            <tr>
+                                <th>Location</th>
+                                <th>Product</th>
+                                <th class="text-end">0 - 30</th>
+                                <th class="text-end">30 - 90</th>
+                                <th class="text-end">90 - 180</th>
+                                <th class="text-end">180 - 365</th>
+                                <th class="text-end">365+</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-end">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="lines" t-as="l">
+                                <td><t t-esc="l['location']"/></td>
+                                <td>
+                                    <t t-if="l['code']">[<t t-esc="l['code']"/>] </t><t t-esc="l['product']"/>
+                                </td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['qty_0_30']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['qty_30_90']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['qty_90_180']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['qty_180_365']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['qty_365_plus']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['quantity']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['value']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

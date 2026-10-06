@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- PIVOT VIEW: the main report.
+         Rows = location, then product. Measures (columns) = the 5 age buckets,
+         total quantity and value. Use the "Group By" options in the search
+         box (Year / Quarter / Month / Day) to break the rows down by date. -->
+    <record id="view_stock_ageing_report_pivot" model="ir.ui.view">
+        <field name="name">stock.ageing.report.pivot</field>
+        <field name="model">stock.ageing.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Ageing Products" disable_linking="1">
+                <field name="location_id" type="row"/>
+                <field name="product_id" type="row"/>
+                <field name="qty_0_30" type="measure"/>
+                <field name="qty_30_90" type="measure"/>
+                <field name="qty_90_180" type="measure"/>
+                <field name="qty_180_365" type="measure"/>
+                <field name="qty_365_plus" type="measure"/>
+                <field name="quantity" type="measure"/>
+                <field name="value" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- LIST VIEW: raw layer rows, read-only. `sum="Total"` shows column totals. -->
+    <record id="view_stock_ageing_report_tree" model="ir.ui.view">
+        <field name="name">stock.ageing.report.tree</field>
+        <field name="model">stock.ageing.report</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" delete="0">
+                <field name="location_id"/>
+                <field name="product_id"/>
+                <field name="in_date"/>
+                <field name="age_days"/>
+                <field name="qty_0_30" sum="Total"/>
+                <field name="qty_30_90" sum="Total"/>
+                <field name="qty_90_180" sum="Total"/>
+                <field name="qty_180_365" sum="Total"/>
+                <field name="qty_365_plus" sum="Total"/>
+                <field name="quantity" sum="Total"/>
+                <field name="value" sum="Total"/>
+                <!-- only visible when the user works with several companies -->
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- SEARCH VIEW: searchable fields, filters and the Group By options. -->
+    <record id="view_stock_ageing_report_search" model="ir.ui.view">
+        <field name="name">stock.ageing.report.search</field>
+        <field name="model">stock.ageing.report</field>
+        <field name="arch" type="xml">
+            <search string="Ageing Products">
+                <!-- typing in the search box can match these fields -->
+                <field name="product_id"/>
+                <field name="location_id"/>
+                <field name="warehouse_id"/>
+                <field name="categ_id"/>
+                <!-- quick filters -->
+                <filter name="never_sold" string="Never Sold" domain="[('no_sale', '=', True)]"/>
+                <filter name="aged_365" string="365+ Days" domain="[('qty_365_plus', '>', 0)]"/>
+                <separator/>
+                <filter name="this_year" string="In Stock This Year"
+                        domain="[('in_date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
+                <!-- Group By options; "in_date:year" etc. group the date field by period -->
+                <filter name="group_location" string="Location" context="{'group_by': 'location_id'}"/>
+                <filter name="group_warehouse" string="Warehouse" context="{'group_by': 'warehouse_id'}"/>
+                <filter name="group_product" string="Product" context="{'group_by': 'product_id'}"/>
+                <filter name="group_categ" string="Product Category" context="{'group_by': 'categ_id'}"/>
+                <separator/>
+                <filter name="group_year" string="Year" context="{'group_by': 'in_date:year'}"/>
+                <filter name="group_quarter" string="Quarter" context="{'group_by': 'in_date:quarter'}"/>
+                <filter name="group_month" string="Month" context="{'group_by': 'in_date:month'}"/>
+                <filter name="group_day" string="Day" context="{'group_by': 'in_date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- WINDOW ACTION: opens the snapshot as pivot (default) or list.
+         The wizard calls this action and adds its warehouse filter. -->
+    <record id="action_stock_ageing_report" model="ir.actions.act_window">
+        <field name="name">Ageing Products</field>
+        <field name="res_model">stock.ageing.report</field>
+        <field name="view_mode">pivot,list</field>
+        <field name="search_view_id" ref="view_stock_ageing_report_search"/>
+    </record>
+</odoo>

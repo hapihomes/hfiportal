@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Record rule: a user only sees report rows of the companies currently
+         selected in the company switcher (standard multi-company behaviour). -->
+    <record id="stock_ageing_report_comp_rule" model="ir.rule">
+        <field name="name">Stock Ageing Report: multi-company</field>
+        <field name="model_id" ref="model_stock_ageing_report"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

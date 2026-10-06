@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extends the standard Location form: adds the "Consignment Location"
+         checkbox right after the "Location Type" (usage) field.
+         It is only shown for internal locations. -->
+    <record id="view_location_form_consignment" model="ir.ui.view">
+        <field name="name">stock.location.form.consignment</field>
+        <field name="model">stock.location</field>
+        <field name="inherit_id" ref="stock.view_location_form"/>
+        <field name="arch" type="xml">
+            <field name="usage" position="after">
+                <field name="is_consignment" invisible="usage != 'internal'"/>
+            </field>
+        </field>
+    </record>
+</odoo>
