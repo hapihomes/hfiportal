@@ -20,9 +20,6 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 
-# Age given to products that were never sold (business rule A).
-NO_SALE_AGE = 365
-
 
 class StockAgeingReport(models.Model):
     _name = 'stock.ageing.report'
@@ -97,7 +94,7 @@ class StockAgeingReport(models.Model):
             return 'qty_90_180'
         if age < 365:
             return 'qty_180_365'
-        return 'qty_365_plus'  # 365 and older (never-sold stock lands here)
+        return 'qty_365_plus'  # 365 days and older
 
     # ------------------------------------------------------------------
     # Main computation (one company)
@@ -141,8 +138,9 @@ class StockAgeingReport(models.Model):
             return []
         product_ids = list({p for p, _l in target})
 
-        # ---- Rule A: which products were EVER sold? ----------------------
+        # ---- Which products were EVER sold? (informational flag only) ----
         # "Sold" = at least one done move line going to a customer location.
+        # It does NOT change the age: every product uses its real FIFO age.
         cr.execute("""
             SELECT DISTINCT sml.product_id
               FROM stock_move_line sml
@@ -216,11 +214,8 @@ class StockAgeingReport(models.Model):
                 layers.get((pid, lid), []), qty,
                 (min_in_date and min_in_date.date()) or today)
 
-            # Rule A: never sold -> the whole stock is 365 days old,
-            # wherever it is (single layer dated exactly 365 days ago).
+            # Flag only: never-sold products keep their real FIFO age.
             no_sale = pid not in sold
-            if no_sale:
-                pair_layers = [[fields.Date.subtract(today, days=NO_SALE_AGE), qty]]
 
             for day, lqty in pair_layers:
                 age = (today - day).days

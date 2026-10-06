@@ -8,7 +8,7 @@ Ageing Products report under Inventory > Reporting.
 
 * Ageing starts when stock enters the warehouse stock location.
 * FIFO layers per product/location, bucketed in 0-30 / 30-90 / 90-180 / 180-365 / 365+ days.
-* Products that were never sold are aged at 365 days.
+* Every product uses its real FIFO age; "Never Sold" is only a flag.
 * Returns restart at 0 days.
 * Consignment locations are excluded.
 """,
