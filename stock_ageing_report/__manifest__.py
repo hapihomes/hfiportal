@@ -26,4 +26,5 @@ Ageing Products report under Inventory > Reporting.
     'installable': True,
     'application': False,
     'license': 'LGPL-3',
+    'author': 'Jofferson Pascual',
 }
