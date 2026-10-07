@@ -3,7 +3,7 @@ import unicodedata
 
 from odoo import api, fields, models
 
-ADDRESS_TRIGGER_FIELDS = {'street', 'street2', 'city', 'zip', 'country_id', 'state_id', 'city_id'}
+ADDRESS_TRIGGER_FIELDS = {'street', 'street2', 'city', 'zip', 'country_id', 'state_id'}
 
 
 def _norm(text):
@@ -64,12 +64,11 @@ class ResPartner(models.Model):
         self.ensure_one()
         cities_by_country = {} if cities_by_country is None else cities_by_country
         states_by_country = {} if states_by_country is None else states_by_country
-        has_city_model = 'city_id' in self._fields
 
         text = _norm(' '.join(filter(None, [self.street, self.street2, self.city])))
         country = self.country_id or self.env.company.country_id
         state = self.state_id
-        city = self.city_id if has_city_model else self.env['res.city']
+        city = self.env['res.country.city']
         vals = {}
 
         def country_records(cache, model, country):
@@ -80,8 +79,8 @@ class ResPartner(models.Model):
             return cache[key]
 
         # 1. City: from the text, or from the ZIP code.
-        if has_city_model and not city and (text or self.zip):
-            candidates = country_records(cities_by_country, 'res.city', country)
+        if text or self.zip:
+            candidates = country_records(cities_by_country, 'res.country.city', country)
             if state:
                 candidates = candidates.filtered(lambda c: c.state_id == state)
             found = _find_matches(text, candidates) if text else []
@@ -90,7 +89,6 @@ class ResPartner(models.Model):
                 found = [c for c in found if c in by_zip] or list(by_zip)
             if len(found) == 1:
                 city = found[0]
-                vals['city_id'] = city.id
                 if not self.city:
                     vals['city'] = city.name
 

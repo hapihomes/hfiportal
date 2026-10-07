@@ -9,13 +9,13 @@
     'category': 'Contacts',
     'depends': [
         'contacts',
-        'base_address_city',
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/res_country_region_views.xml',
         'views/res_partner_views.xml',
         'data/ir_cron_data.xml',
+        'data/res_country_city_data.xml',
     ],
     'post_init_hook': '_post_init_link_regions',
     'auto_install': False,
