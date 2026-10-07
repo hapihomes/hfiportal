@@ -1,24 +1,23 @@
 {
-    'name': 'automated_correct_contact_address_city_state',
-    'version': '1.0',
-    'description': 'Automate and correct contact details',
-    'summary': '',
+    'name': 'Automated Correct Contact Address (Region, City, State)',
+    'version': '19.0.1.0.0',
+    'description': 'Scans the contact address and automatically fills in the Region, City and State.',
+    'summary': 'Auto-fill Region, City and State from the contact address',
     'author': 'Jofferson Pascual',
     'website': '',
     'license': 'LGPL-3',
-    'category': '',
+    'category': 'Contacts',
     'depends': [
-        ''
+        'contacts',
+        'base_address_city',
     ],
     'data': [
-        ''
+        'security/ir.model.access.csv',
+        'views/res_country_region_views.xml',
+        'views/res_partner_views.xml',
+        'data/ir_cron_data.xml',
     ],
-    'demo': [
-        ''
-    ],
+    'post_init_hook': '_post_init_link_regions',
     'auto_install': False,
     'application': False,
-    'assets': {
-        
-    }
 }
