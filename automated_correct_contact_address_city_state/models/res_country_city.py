@@ -1,4 +1,4 @@
-from odoo import fields, models
+from odoo import api, fields, models
 
 from ..data.ph_cities import PH_CITIES, PH_STATE_ALIASES
 from ..hooks import _norm
@@ -16,6 +16,7 @@ class ResCountryCity(models.Model):
         'res.country.state', string='State', ondelete='cascade',
         domain="[('country_id', '=', country_id)]")
 
+    @api.model
     def _load_ph_cities(self):
         """Create the missing Philippine cities (idempotent, runs on every upgrade)."""
         country = self.env.ref('base.ph', raise_if_not_found=False)
