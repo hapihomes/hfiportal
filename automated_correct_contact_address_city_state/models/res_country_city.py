@@ -17,7 +17,7 @@ class ResCountryCity(models.Model):
         domain="[('country_id', '=', country_id)]")
 
     @api.model
-    def _load_ph_cities(self):
+    def _load_ph_cities(self, *args):
         """Create the missing Philippine cities (idempotent, runs on every upgrade)."""
         country = self.env.ref('base.ph', raise_if_not_found=False)
         if not country:
