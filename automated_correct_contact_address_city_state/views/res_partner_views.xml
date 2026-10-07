@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_region" model="ir.ui.view">
+        <field name="name">res.partner.form.region</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='state_id']" position="after">
+                <field name="region_id" placeholder="Region" class="o_address_state"
+                       options="{'no_open': True, 'no_quick_create': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_server_autofill_address" model="ir.actions.server">
+        <field name="name">Auto-fill Region, City and State</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">records.action_autofill_address()</field>
+    </record>
+</odoo>
