@@ -41,7 +41,8 @@
                                 <th class="text-end">180 - 365</th>
                                 <th class="text-end">365+</th>
                                 <th class="text-end">Total</th>
-                                <th class="text-end">Value</th>
+                                <th class="text-end">Available Qty</th>
+                                <th class="text-end">Total Cost</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,6 +57,7 @@
                                 <td class="text-end"><t t-esc="'%.2f' % l['qty_180_365']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % l['qty_365_plus']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % l['quantity']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['available_quantity']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % l['value']"/></td>
                             </tr>
                         </tbody>
