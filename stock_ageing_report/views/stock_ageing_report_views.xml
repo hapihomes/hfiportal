@@ -17,7 +17,6 @@
                 <field name="qty_180_365" type="measure"/>
                 <field name="qty_365_plus" type="measure"/>
                 <field name="quantity" type="measure"/>
-                <field name="available_quantity" type="measure"/>
                 <field name="value" type="measure"/>
             </pivot>
         </field>
@@ -39,7 +38,6 @@
                 <field name="qty_180_365" sum="Total"/>
                 <field name="qty_365_plus" sum="Total"/>
                 <field name="quantity" sum="Total"/>
-                <field name="available_quantity" sum="Total"/>
                 <field name="value" sum="Total"/>
                 <!-- only visible when the user works with several companies -->
                 <field name="company_id" groups="base.group_multi_company"/>
