@@ -55,9 +55,11 @@ class DispatchReceipt(models.Model):
 
     line_ids = fields.One2many('dispatch.receipt.line', 'dispatch_id', string='Deliveries')
 
-    prepared_by = fields.Char(string='Prepared By')
-    approved_by = fields.Char(string='Approved By')
-    dispatched_by = fields.Char(string='Dispatched By')
+    prepared_by_id = fields.Many2one(
+        'hr.employee', string='Prepared By',
+        default=lambda self: self.env.user.employee_id)
+    approved_by_id = fields.Many2one('hr.employee', string='Approved By')
+    dispatched_by_id = fields.Many2one('hr.employee', string='Dispatched By')
 
     total_customers = fields.Integer(compute='_compute_totals')
     total_pickings = fields.Integer(string='Qty of TR/DR', compute='_compute_totals')

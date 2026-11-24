@@ -42,7 +42,7 @@ For warehouse associates, supervisors and team leaders who prepare the DDR sheet
 | Delivery Helper(s) | Free text, e.g. `Rico Escandor / Daryll Sol Pacay` |
 | Transport Provider | Printed under the Control # |
 | Delivery Area | Auto-built from line locations; editable |
-| Signatories tab | Prepared By, Approved By, Dispatched By |
+| Signatories tab | Select **Prepared By**, **Approved By** and **Dispatched By** from the Employees list (Prepared By defaults to the logged-in user's employee record) |
 
 The **Control #** (format `MMYY-###`, e.g. `1126-017`) is generated on save.
 

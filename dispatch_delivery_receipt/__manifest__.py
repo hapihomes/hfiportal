@@ -3,7 +3,7 @@
     'version': '19.0.1.0.0',
     'category': 'Inventory/Delivery',
     'summary': 'Dispatch Delivery Receipt (DDR) sheet populated from delivery orders and Fleet',
-    'depends': ['stock', 'sale_stock', 'fleet'],
+    'depends': ['stock', 'sale_stock', 'fleet', 'hr'],
     'data': [
         'security/ir.model.access.csv',
         'data/sequence.xml',

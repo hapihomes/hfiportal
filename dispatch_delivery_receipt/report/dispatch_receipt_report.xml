@@ -121,9 +121,9 @@
 
                     <table style="margin-top:4px;">
                         <tr>
-                            <td style="width:25%">PREPARED BY:<br/><br/><div class="center bold"><t t-esc="o.prepared_by"/></div><div class="center small">WLD ASSOCIATE</div></td>
-                            <td style="width:25%">APPROVED BY:<br/><br/><div class="center bold"><t t-esc="o.approved_by"/></div><div class="center small">SUPERVISOR</div></td>
-                            <td style="width:25%">DISPATCHED BY:<br/><br/><div class="center bold"><t t-esc="o.dispatched_by"/></div><div class="center small">TEAM LEADER</div></td>
+                            <td style="width:25%">PREPARED BY:<br/><br/><div class="center bold"><t t-esc="o.prepared_by_id.name"/></div><div class="center small">WLD ASSOCIATE</div></td>
+                            <td style="width:25%">APPROVED BY:<br/><br/><div class="center bold"><t t-esc="o.approved_by_id.name"/></div><div class="center small">SUPERVISOR</div></td>
+                            <td style="width:25%">DISPATCHED BY:<br/><br/><div class="center bold"><t t-esc="o.dispatched_by_id.name"/></div><div class="center small">TEAM LEADER</div></td>
                             <td>
                                 ALL DOCS RECEIVED BY:<br/>
                                 ODOMETER READING (DEPARTURE): <t t-if="o.odometer_departure" t-esc="'%.0f' % o.odometer_departure"/><t t-else="">______</t><br/>

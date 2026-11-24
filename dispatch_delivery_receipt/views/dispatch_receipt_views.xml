@@ -84,9 +84,9 @@
                         </page>
                         <page string="Signatories" name="signatories">
                             <group>
-                                <field name="prepared_by"/>
-                                <field name="approved_by"/>
-                                <field name="dispatched_by"/>
+                                <field name="prepared_by_id" options="{'no_create': True}"/>
+                                <field name="approved_by_id" options="{'no_create': True}"/>
+                                <field name="dispatched_by_id" options="{'no_create': True}"/>
                             </group>
                         </page>
                     </notebook>
