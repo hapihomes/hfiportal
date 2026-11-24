@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_dispatch_receipt" model="report.paperformat">
+        <field name="name">Dispatch Delivery Receipt (Landscape)</field>
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">8</field>
+        <field name="margin_bottom">8</field>
+        <field name="margin_left">8</field>
+        <field name="margin_right">8</field>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_dispatch_receipt" model="ir.actions.report">
+        <field name="name">Dispatch Delivery Receipt</field>
+        <field name="model">dispatch.receipt</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">dispatch_delivery_receipt.report_dispatch_receipt</field>
+        <field name="report_file">dispatch_delivery_receipt.report_dispatch_receipt</field>
+        <field name="print_report_name">'DDR - %s' % object.name</field>
+        <field name="paperformat_id" ref="paperformat_dispatch_receipt"/>
+        <field name="binding_model_id" ref="model_dispatch_receipt"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="report_dispatch_receipt">
+        <t t-call="web.basic_layout">
+            <t t-foreach="docs" t-as="o">
+                <style>
+                    .ddr { font-family: Arial, sans-serif; font-size: 9pt; color: #000; }
+                    .ddr table { width: 100%; border-collapse: collapse; }
+                    .ddr td, .ddr th { border: 1px solid #000; padding: 2px 4px; }
+                    .ddr .title { font-size: 26pt; font-weight: bold; text-align: center; border: none; }
+                    .ddr .noborder td { border: none; }
+                    .ddr .lines td { height: 18px; }
+                    .ddr .lines th { background: #eee; text-align: center; }
+                    .ddr .center { text-align: center; }
+                    .ddr .bold { font-weight: bold; }
+                    .ddr .small { font-size: 7pt; }
+                </style>
+                <div class="ddr page">
+                    <table class="noborder">
+                        <tr>
+                            <td style="width:20%"><b><t t-esc="o.company_id.name"/></b></td>
+                            <td class="title">DISPATCH DELIVERY RECEIPT</td>
+                            <td style="width:22%; text-align:right;">
+                                Control #: <span class="bold" style="font-size:13pt;"><t t-esc="o.name"/></span><br/>
+                                <span class="bold"><t t-esc="o.carrier_name"/></span>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <table style="margin-top:4px;">
+                        <tr>
+                            <td style="width:15%">DELIVERY DATE:</td>
+                            <td class="bold" style="width:35%"><span t-field="o.date" t-options='{"format": "MMMM dd, yyyy"}'/></td>
+                            <td style="width:15%">DRIVER'S NAME:</td>
+                            <td class="bold"><t t-esc="o.driver_name"/></td>
+                        </tr>
+                        <tr>
+                            <td>DELIVERY AREA:</td>
+                            <td class="bold"><t t-esc="o.delivery_area"/></td>
+                            <td>DELIVERY HELPER:</td>
+                            <td class="bold"><t t-esc="o.helper_names"/></td>
+                        </tr>
+                    </table>
+
+                    <t t-set="lines" t-value="o._get_sorted_lines()"/>
+                    <table class="lines" style="margin-top:4px;">
+                        <thead>
+                            <tr>
+                                <th style="width:6%">TIME IN</th>
+                                <th style="width:6%">TIME OUT</th>
+                                <th style="width:8%">TR#/DR#</th>
+                                <th style="width:8%">SI#</th>
+                                <th style="width:8%">ASR#</th>
+                                <th style="width:9%">ASA/DA#/PL#/CR#/OS#</th>
+                                <th style="width:12%">LOCATION</th>
+                                <th>CLIENT NAME</th>
+                                <th style="width:11%">SIGNATURE</th>
+                                <th style="width:5%"># OF DROP/s</th>
+                                <th style="width:9%">REMARKS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="lines" t-as="l">
+                                <tr>
+                                    <td/><td/>
+                                    <td class="center"><t t-esc="l.tr_dr"/></td>
+                                    <td class="center"><t t-esc="l.si_ref"/></td>
+                                    <td/><td/>
+                                    <td class="center"><t t-esc="l.location"/></td>
+                                    <td class="center"><t t-esc="l.client_name"/></td>
+                                    <td/><td/>
+                                    <td><t t-esc="l.remarks"/></td>
+                                </tr>
+                            </t>
+                            <!-- pad to a fixed paper-form height -->
+                            <t t-foreach="range(max(0, 18 - len(lines)))" t-as="pad">
+                                <tr><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/><td/></tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <table style="margin-top:4px;">
+                        <tr class="bold">
+                            <td>TOTAL CUSTOMER: <t t-esc="o.total_customers"/></td>
+                            <td>QTY OF TR/DR: <t t-esc="o.total_pickings"/></td>
+                            <td>QTY OF SI: <t t-esc="o.total_si"/></td>
+                            <td>TOTAL # OF ASR: ____</td>
+                            <td>DROP's: <t t-esc="o.total_customers"/></td>
+                        </tr>
+                    </table>
+
+                    <table style="margin-top:4px;">
+                        <tr>
+                            <td style="width:25%">PREPARED BY:<br/><br/><div class="center bold"><t t-esc="o.prepared_by"/></div><div class="center small">WLD ASSOCIATE</div></td>
+                            <td style="width:25%">APPROVED BY:<br/><br/><div class="center bold"><t t-esc="o.approved_by"/></div><div class="center small">SUPERVISOR</div></td>
+                            <td style="width:25%">DISPATCHED BY:<br/><br/><div class="center bold"><t t-esc="o.dispatched_by"/></div><div class="center small">TEAM LEADER</div></td>
+                            <td>
+                                ALL DOCS RECEIVED BY:<br/>
+                                ODOMETER READING (DEPARTURE): ______<br/>
+                                ODOMETER READING (ARRIVAL): ______<br/>
+                                <span class="small">Print Name &amp; Signature / Time of Arrival</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="small" style="margin-top:4px;">
+                        Ang lahat na dokumento at halaga ng salapi na nakasaad sa opisyal na dokumento na ito ay aking tinatanggap at aking
+                        responsibilidad na ito ay maibalik ng kumpleto at ang halaga ng nagastos ay tutugma sa halaga ng maibabalik na sukli sa
+                        loob ng 24 na oras pagbalik ko sa warehouse.
+                    </div>
+                    <div style="margin-top:4px; font-style:italic;">
+                        NOTE: PLEASE FILL OUT TIME IN &amp; OUT, TIME OF ARRIVAL &amp; ALL DOCS RECEIVED BY. THANK YOU FOR YOUR COOPERATION.
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

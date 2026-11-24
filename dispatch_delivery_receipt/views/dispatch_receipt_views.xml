@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_dispatch_receipt_list" model="ir.ui.view">
+        <field name="name">dispatch.receipt.list</field>
+        <field name="model">dispatch.receipt</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date"/>
+                <field name="driver_name"/>
+                <field name="delivery_area"/>
+                <field name="total_pickings"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-warning="state == 'confirmed'"
+                       decoration-success="state == 'done'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_dispatch_receipt_form" model="ir.ui.view">
+        <field name="name">dispatch.receipt.form</field>
+        <field name="model">dispatch.receipt</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_confirm" string="Dispatch" type="object"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_done" string="Mark Done" type="object"
+                            class="btn-primary" invisible="state != 'confirmed'"/>
+                    <button name="action_print" string="Print DDR" type="object"
+                            invisible="not line_ids"/>
+                    <button name="action_cancel" string="Cancel" type="object"
+                            invisible="state in ('done', 'cancel')"/>
+                    <button name="action_draft" string="Set to Draft" type="object"
+                            invisible="state != 'cancel'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,confirmed,done"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="vehicle_id" readonly="state != 'draft'"/>
+                            <field name="driver_id" readonly="state != 'draft'"/>
+                            <field name="driver_name" readonly="state != 'draft'"/>
+                            <field name="helper_names" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="carrier_name"/>
+                            <field name="delivery_area"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Deliveries" name="deliveries">
+                            <field name="line_ids" readonly="state != 'draft'">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="picking_id"/>
+                                    <field name="si_ref"/>
+                                    <field name="location"/>
+                                    <field name="partner_id" column_invisible="True"/>
+                                    <field name="client_name"/>
+                                    <field name="remarks"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_customers"/>
+                                <field name="total_pickings"/>
+                                <field name="total_si"/>
+                            </group>
+                        </page>
+                        <page string="Signatories" name="signatories">
+                            <group>
+                                <field name="prepared_by"/>
+                                <field name="approved_by"/>
+                                <field name="dispatched_by"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_dispatch_receipt" model="ir.actions.act_window">
+        <field name="name">Dispatch Delivery Receipts</field>
+        <field name="res_model">dispatch.receipt</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_dispatch_receipt"
+              name="Dispatch Receipts"
+              parent="stock.menu_stock_warehouse_mgmt"
+              action="action_dispatch_receipt"
+              sequence="30"/>
+</odoo>
