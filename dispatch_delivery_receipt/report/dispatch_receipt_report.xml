@@ -64,6 +64,12 @@
                             <td>DELIVERY HELPER:</td>
                             <td class="bold"><t t-esc="o.helper_names"/></td>
                         </tr>
+                        <tr>
+                            <td>TRUCK / PLATE NO.:</td>
+                            <td class="bold"><t t-esc="o.truck_model"/> <t t-if="o.truck_plate">- <t t-esc="o.truck_plate"/></t></td>
+                            <td>DRIVER CONTACT:</td>
+                            <td class="bold"><t t-esc="o.driver_phone"/></td>
+                        </tr>
                     </table>
 
                     <t t-set="lines" t-value="o._get_sorted_lines()"/>
@@ -120,8 +126,8 @@
                             <td style="width:25%">DISPATCHED BY:<br/><br/><div class="center bold"><t t-esc="o.dispatched_by"/></div><div class="center small">TEAM LEADER</div></td>
                             <td>
                                 ALL DOCS RECEIVED BY:<br/>
-                                ODOMETER READING (DEPARTURE): ______<br/>
-                                ODOMETER READING (ARRIVAL): ______<br/>
+                                ODOMETER READING (DEPARTURE): <t t-if="o.odometer_departure" t-esc="'%.0f' % o.odometer_departure"/><t t-else="">______</t><br/>
+                                ODOMETER READING (ARRIVAL): <t t-if="o.odometer_arrival" t-esc="'%.0f' % o.odometer_arrival"/><t t-else="">______</t><br/>
                                 <span class="small">Print Name &amp; Signature / Time of Arrival</span>
                             </td>
                         </tr>

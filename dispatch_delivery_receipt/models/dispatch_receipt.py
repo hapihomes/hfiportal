@@ -32,7 +32,22 @@ class DispatchReceipt(models.Model):
     driver_name = fields.Char(
         string="Driver's Name",
         compute='_compute_driver_name', store=True, readonly=False)
+    driver_phone = fields.Char(
+        string='Driver Contact', compute='_compute_driver_phone',
+        store=True, readonly=False)
     helper_names = fields.Char(string='Delivery Helper(s)')
+
+    # Truck details pulled from Fleet (editable for third-party trucks)
+    truck_plate = fields.Char(
+        string='Plate No.', compute='_compute_truck_details', store=True, readonly=False)
+    truck_model = fields.Char(
+        string='Truck Model', compute='_compute_truck_details', store=True, readonly=False)
+    truck_type = fields.Char(
+        string='Truck Type', compute='_compute_truck_details', store=True, readonly=False)
+    odometer_departure = fields.Float(
+        string='Odometer (Departure)', compute='_compute_truck_details',
+        store=True, readonly=False)
+    odometer_arrival = fields.Float(string='Odometer (Arrival)')
 
     delivery_area = fields.Char(
         string='Delivery Area', compute='_compute_delivery_area',
@@ -55,6 +70,32 @@ class DispatchReceipt(models.Model):
                 rec.driver_id = rec.vehicle_id.driver_id
             elif not rec.driver_id:
                 rec.driver_id = False
+
+    @api.onchange('driver_id')
+    def _onchange_driver_id(self):
+        """Reverse direction: pick a driver first and find their Fleet vehicle."""
+        if self.driver_id and not self.vehicle_id:
+            vehicle = self.env['fleet.vehicle'].search(
+                [('driver_id', '=', self.driver_id.id)], limit=1)
+            if vehicle:
+                self.vehicle_id = vehicle
+
+    @api.depends('driver_id')
+    def _compute_driver_phone(self):
+        for rec in self:
+            rec.driver_phone = (
+                rec.driver_id.phone if rec.driver_id else rec.driver_phone)
+
+    @api.depends('vehicle_id')
+    def _compute_truck_details(self):
+        for rec in self:
+            v = rec.vehicle_id
+            if not v:
+                continue
+            rec.truck_plate = v.license_plate
+            rec.truck_model = v.model_id.display_name
+            rec.truck_type = v.category_id.name if 'category_id' in v._fields else False
+            rec.odometer_departure = v.odometer
 
     @api.depends('driver_id')
     def _compute_driver_name(self):

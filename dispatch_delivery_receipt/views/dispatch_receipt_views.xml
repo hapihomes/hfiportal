@@ -47,7 +47,15 @@
                             <field name="vehicle_id" readonly="state != 'draft'"/>
                             <field name="driver_id" readonly="state != 'draft'"/>
                             <field name="driver_name" readonly="state != 'draft'"/>
+                            <field name="driver_phone" readonly="state != 'draft'"/>
                             <field name="helper_names" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Truck">
+                            <field name="truck_plate" readonly="state != 'draft'"/>
+                            <field name="truck_model" readonly="state != 'draft'"/>
+                            <field name="truck_type" readonly="state != 'draft'"/>
+                            <field name="odometer_departure"/>
+                            <field name="odometer_arrival"/>
                         </group>
                         <group>
                             <field name="carrier_name"/>
