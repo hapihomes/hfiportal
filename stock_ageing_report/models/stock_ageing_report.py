@@ -41,7 +41,9 @@ class StockAgeingReport(models.Model):
 
     # ---- Measures --------------------------------------------------------
     quantity = fields.Float(string='Quantity', readonly=True)
-    value = fields.Float(string='Value', readonly=True)  # quantity x standard price
+    # Quantity not reserved by outgoing moves (on hand - reserved).
+    available_quantity = fields.Float(string='Available Quantity', readonly=True)
+    value = fields.Float(string='Total Cost', readonly=True)  # quantity x standard price
 
     # One column per age bucket. Each row fills exactly ONE of them
     # (the others stay 0), so summing a column in the pivot gives the total
@@ -127,13 +129,13 @@ class StockAgeingReport(models.Model):
         quant_data = env['stock.quant']._read_group(
             [('location_id', 'in', locations.ids), ('company_id', '=', company.id)],
             ['product_id', 'location_id'],
-            ['quantity:sum', 'in_date:min'],
+            ['quantity:sum', 'reserved_quantity:sum', 'in_date:min'],
         )
-        # target[(product_id, location_id)] = (on-hand qty, oldest quant date)
+        # target[(product_id, location_id)] = (on-hand qty, reserved qty, oldest quant date)
         target = {}
-        for product, location, qty, min_in_date in quant_data:
+        for product, location, qty, reserved, min_in_date in quant_data:
             if qty > 0:
-                target[(product.id, location.id)] = (qty, min_in_date)
+                target[(product.id, location.id)] = (qty, min(max(reserved, 0.0), qty), min_in_date)
         if not target:
             return []
         product_ids = list({p for p, _l in target})
@@ -207,7 +209,7 @@ class StockAgeingReport(models.Model):
         categ = {p.id: p.categ_id.id for p in products}
 
         vals_list = []
-        for (pid, lid), (qty, min_in_date) in target.items():
+        for (pid, lid), (qty, reserved, min_in_date) in target.items():
             # The replay can drift from reality (old data, manual quant edits).
             # Force the layers to add up to the real on-hand quantity.
             pair_layers = self._reconcile(
@@ -217,7 +219,12 @@ class StockAgeingReport(models.Model):
             # Flag only: never-sold products keep their real FIFO age.
             no_sale = pid not in sold
 
+            # Reserved units are taken from the oldest layers first (FIFO),
+            # the rest of each layer is available.
+            to_reserve = reserved
             for day, lqty in pair_layers:
+                lreserved = min(lqty, to_reserve)
+                to_reserve -= lreserved
                 age = (today - day).days
                 vals = {
                     'product_id': pid,
@@ -229,6 +236,7 @@ class StockAgeingReport(models.Model):
                     'age_days': age,
                     'no_sale': no_sale,
                     'quantity': lqty,
+                    'available_quantity': lqty - lreserved,
                     'value': lqty * cost[pid],
                     # all buckets start at 0 ...
                     'qty_0_30': 0.0, 'qty_30_90': 0.0, 'qty_90_180': 0.0,
@@ -309,11 +317,12 @@ class StockAgeingReport(models.Model):
                 'code': rec.product_id.default_code or '',
                 'product': rec.product_id.name or '',
                 'never_sold': rec.no_sale,
-                'quantity': 0.0, 'value': 0.0,
+                'quantity': 0.0, 'available_quantity': 0.0, 'value': 0.0,
                 **{b: 0.0 for b in self.BUCKETS},
             })
             # then add this layer's numbers to the line
             line['quantity'] += rec.quantity
+            line['available_quantity'] += rec.available_quantity
             line['value'] += rec.value
             for b in self.BUCKETS:
                 line[b] += rec[b]
