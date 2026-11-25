@@ -29,49 +29,54 @@
         <t t-call="web.html_container">
             <t t-call="web.internal_layout">
                 <div class="page">
-                    <h3>Ageing Products</h3>
-                    <table class="table table-sm o_main_table" style="font-size: 9px;">
-                        <thead>
-                            <tr>
-                                <th>Location</th>
-                                <th>Product</th>
-                                <th class="text-end">0 - 30</th>
-                                <th class="text-end">30 - 90</th>
-                                <th class="text-end">90 - 180</th>
-                                <th class="text-end">180 - 365</th>
-                                <th class="text-end">365+</th>
-                                <th class="text-end">Total</th>
-                                <th class="text-end">Available Qty</th>
-                                <th class="text-end">Total Cost</th>
-                                <th class="text-end">0 - 30 Cost</th>
-                                <th class="text-end">30 - 90 Cost</th>
-                                <th class="text-end">90 - 180 Cost</th>
-                                <th class="text-end">180 - 365 Cost</th>
-                                <th class="text-end">365+ Cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr t-foreach="lines" t-as="l">
-                                <td><t t-esc="l['location']"/></td>
-                                <td>
-                                    <t t-if="l['code']">[<t t-esc="l['code']"/>] </t><t t-esc="l['product']"/>
-                                </td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['qty_0_30']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['qty_30_90']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['qty_90_180']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['qty_180_365']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['qty_365_plus']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['quantity']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['available_quantity']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['value']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['cost_0_30']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['cost_30_90']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['cost_90_180']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['cost_180_365']"/></td>
-                                <td class="text-end"><t t-esc="'%.2f' % l['cost_365_plus']"/></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Two tables: per location/product, then totals per product -->
+                    <t t-foreach="[('Ageing Products', lines), ('Totals per Product (all locations)', product_totals)]" t-as="sec">
+                        <div t-att-style="'' if sec_first else 'page-break-before: always;'">
+                        <h3><t t-esc="sec[0]"/></h3>
+                        <table class="table table-sm o_main_table" style="font-size: 9px;">
+                            <thead>
+                                <tr>
+                                    <th>Location</th>
+                                    <th>Product</th>
+                                    <th class="text-end">0 - 30</th>
+                                    <th class="text-end">30 - 90</th>
+                                    <th class="text-end">90 - 180</th>
+                                    <th class="text-end">180 - 365</th>
+                                    <th class="text-end">365+</th>
+                                    <th class="text-end">Total</th>
+                                    <th class="text-end">Available Qty</th>
+                                    <th class="text-end">Total Cost</th>
+                                    <th class="text-end">0 - 30 Cost</th>
+                                    <th class="text-end">30 - 90 Cost</th>
+                                    <th class="text-end">90 - 180 Cost</th>
+                                    <th class="text-end">180 - 365 Cost</th>
+                                    <th class="text-end">365+ Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="sec[1]" t-as="l">
+                                    <td><t t-esc="l['location']"/></td>
+                                    <td>
+                                        <t t-if="l['code']">[<t t-esc="l['code']"/>] </t><t t-esc="l['product']"/>
+                                    </td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['qty_0_30']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['qty_30_90']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['qty_90_180']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['qty_180_365']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['qty_365_plus']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['quantity']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['available_quantity']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['value']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['cost_0_30']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['cost_30_90']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['cost_90_180']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['cost_180_365']"/></td>
+                                    <td class="text-end"><t t-esc="'%.2f' % l['cost_365_plus']"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </t>
                 </div>
             </t>
         </t>

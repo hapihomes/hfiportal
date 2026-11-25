@@ -12,9 +12,11 @@ class ReportStockAgeing(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         """Prepare the variables available inside the QWeb template."""
         docs = self.env['stock.ageing.report'].browse(docids)
+        lines = docs._export_lines()   # one line per location/product
         return {
             'doc_ids': docids,
             'doc_model': 'stock.ageing.report',
-            'lines': docs._export_lines(),   # one line per location/product
+            'lines': lines,
+            'product_totals': docs._product_totals(lines),   # one line per product
             'company': self.env.company,
         }

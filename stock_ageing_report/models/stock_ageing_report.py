@@ -341,3 +341,22 @@ class StockAgeingReport(models.Model):
             for b in self.BUCKETS + self.COST_BUCKETS:
                 line[b] += rec[b]
         return list(grouped.values())
+
+    def _product_totals(self, lines):
+        """Sum the export lines of each product across ALL locations.
+
+        Takes the list returned by `_export_lines()` and returns one line per
+        product (same keys), with the location shown as 'All Locations'.
+        """
+        numeric = ['quantity', 'available_quantity', 'value'] + self.BUCKETS + self.COST_BUCKETS
+        totals = {}
+        for line in lines:
+            tot = totals.setdefault((line['code'], line['product']), {
+                'warehouse': '', 'location': 'All Locations',
+                'code': line['code'], 'product': line['product'],
+                'never_sold': line['never_sold'],
+                **{k: 0.0 for k in numeric},
+            })
+            for k in numeric:
+                tot[k] += line[k]
+        return sorted(totals.values(), key=lambda t: (t['product'], t['code']))

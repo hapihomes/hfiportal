@@ -78,11 +78,13 @@ class StockAgeingWizard(models.TransientModel):
             return self.env.ref('stock_ageing_report.action_report_stock_ageing').report_action(records)
 
         # CSV / Excel: build the file in memory, one row per location+product.
-        rows = [self._row(line) for line in records._export_lines()]
+        lines = records._export_lines()
+        rows = [self._row(line) for line in lines]
+        total_rows = [self._row(line) for line in records._product_totals(lines)]
         if self.output_type == 'csv':
-            data, name, mime = self._build_csv(rows), 'ageing_products.csv', 'text/csv'
+            data, name, mime = self._build_csv(rows, total_rows), 'ageing_products.csv', 'text/csv'
         else:
-            data, name = self._build_xlsx(rows), 'ageing_products.xlsx'
+            data, name = self._build_xlsx(rows, total_rows), 'ageing_products.xlsx'
             mime = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
         # Save the file as an attachment and send the browser to download it.
@@ -107,38 +109,46 @@ class StockAgeingWizard(models.TransientModel):
                 line['cost_180_365'], line['cost_365_plus']]
 
     @staticmethod
-    def _build_csv(rows):
+    def _build_csv(rows, total_rows):
         """Return the CSV file content as bytes."""
         out = io.StringIO()
         writer = csv.writer(out)
         writer.writerow(HEADERS)
         writer.writerows(rows)
+        # Second section: total of each product across all locations.
+        writer.writerow([])
+        writer.writerow(['Totals per Product (all locations)'])
+        writer.writerow(HEADERS)
+        writer.writerows(total_rows)
         # utf-8-sig adds a BOM so Excel opens accents/special characters correctly.
         return out.getvalue().encode('utf-8-sig')
 
     @staticmethod
-    def _build_xlsx(rows):
+    def _build_xlsx(rows, total_rows):
         """Return the .xlsx file content as bytes (uses xlsxwriter, bundled with Odoo)."""
         import xlsxwriter
         out = io.BytesIO()
         book = xlsxwriter.Workbook(out, {'in_memory': True})
-        sheet = book.add_worksheet('Ageing Products')
         head = book.add_format({'bold': True, 'bg_color': '#D9E1F2', 'border': 1})
         num = book.add_format({'num_format': '#,##0.00'})
 
-        # Header row.
-        for col, title in enumerate(HEADERS):
-            sheet.write(0, col, title, head)
-        # Data rows: columns 5+ are numbers, so they get the number format.
-        for r, row in enumerate(rows, start=1):
-            for c, val in enumerate(row):
-                sheet.write(r, c, val, num if c >= 5 else None)
-
-        # Column widths and frozen header row.
-        sheet.set_column(0, 1, 28)
-        sheet.set_column(2, 2, 16)
-        sheet.set_column(3, 3, 40)
-        sheet.set_column(4, 17, 14)
-        sheet.freeze_panes(1, 0)
+        # Sheet 1: one row per location + product. Sheet 2: one row per
+        # product, summed across all locations.
+        for title, sheet_rows in (('Ageing Products', rows),
+                                  ('Totals per Product', total_rows)):
+            sheet = book.add_worksheet(title)
+            # Header row.
+            for col, header in enumerate(HEADERS):
+                sheet.write(0, col, header, head)
+            # Data rows: columns 5+ are numbers, so they get the number format.
+            for r, row in enumerate(sheet_rows, start=1):
+                for c, val in enumerate(row):
+                    sheet.write(r, c, val, num if c >= 5 else None)
+            # Column widths and frozen header row.
+            sheet.set_column(0, 1, 28)
+            sheet.set_column(2, 2, 16)
+            sheet.set_column(3, 3, 40)
+            sheet.set_column(4, 17, 14)
+            sheet.freeze_panes(1, 0)
         book.close()
         return out.getvalue()

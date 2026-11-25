@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- PIVOT VIEW: the main report.
-         Rows = location, then product. Measures (columns) = the 5 age buckets,
+         Rows = product, then location (a product row = its total across locations). Measures (columns) = the 5 age buckets,
          total quantity and value. Use the "Group By" options in the search
          box (Year / Quarter / Month / Day) to break the rows down by date. -->
     <record id="view_stock_ageing_report_pivot" model="ir.ui.view">
@@ -9,8 +9,8 @@
         <field name="model">stock.ageing.report</field>
         <field name="arch" type="xml">
             <pivot string="Ageing Products" disable_linking="1">
-                <field name="location_id" type="row"/>
                 <field name="product_id" type="row"/>
+                <field name="location_id" type="row"/>
                 <field name="qty_0_30" type="measure"/>
                 <field name="qty_30_90" type="measure"/>
                 <field name="qty_90_180" type="measure"/>
