@@ -30,7 +30,7 @@
             <t t-call="web.internal_layout">
                 <div class="page">
                     <h3>Ageing Products</h3>
-                    <table class="table table-sm o_main_table" style="font-size: 11px;">
+                    <table class="table table-sm o_main_table" style="font-size: 9px;">
                         <thead>
                             <tr>
                                 <th>Location</th>
@@ -43,6 +43,11 @@
                                 <th class="text-end">Total</th>
                                 <th class="text-end">Available Qty</th>
                                 <th class="text-end">Total Cost</th>
+                                <th class="text-end">0 - 30 Cost</th>
+                                <th class="text-end">30 - 90 Cost</th>
+                                <th class="text-end">90 - 180 Cost</th>
+                                <th class="text-end">180 - 365 Cost</th>
+                                <th class="text-end">365+ Cost</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,6 +64,11 @@
                                 <td class="text-end"><t t-esc="'%.2f' % l['quantity']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % l['available_quantity']"/></td>
                                 <td class="text-end"><t t-esc="'%.2f' % l['value']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['cost_0_30']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['cost_30_90']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['cost_90_180']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['cost_180_365']"/></td>
+                                <td class="text-end"><t t-esc="'%.2f' % l['cost_365_plus']"/></td>
                             </tr>
                         </tbody>
                     </table>

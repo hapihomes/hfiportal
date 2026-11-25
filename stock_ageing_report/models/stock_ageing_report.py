@@ -54,8 +54,18 @@ class StockAgeingReport(models.Model):
     qty_180_365 = fields.Float(string='180 - 365 Days', readonly=True)
     qty_365_plus = fields.Float(string='365+ Days', readonly=True)
 
+    # Cost of each age bucket (bucket quantity x standard price). Same idea as
+    # the quantity buckets: each row fills ONE of them, so the pivot can show
+    # the exact cost of any age range next to its quantity.
+    cost_0_30 = fields.Float(string='0 - 30 Cost', readonly=True)
+    cost_30_90 = fields.Float(string='30 - 90 Cost', readonly=True)
+    cost_90_180 = fields.Float(string='90 - 180 Cost', readonly=True)
+    cost_180_365 = fields.Float(string='180 - 365 Cost', readonly=True)
+    cost_365_plus = fields.Float(string='365+ Cost', readonly=True)
+
     # Names of the bucket fields, used when exporting.
     BUCKETS = ['qty_0_30', 'qty_30_90', 'qty_90_180', 'qty_180_365', 'qty_365_plus']
+    COST_BUCKETS = ['cost_0_30', 'cost_30_90', 'cost_90_180', 'cost_180_365', 'cost_365_plus']
 
     # ------------------------------------------------------------------
     # Entry points
@@ -241,9 +251,13 @@ class StockAgeingReport(models.Model):
                     # all buckets start at 0 ...
                     'qty_0_30': 0.0, 'qty_30_90': 0.0, 'qty_90_180': 0.0,
                     'qty_180_365': 0.0, 'qty_365_plus': 0.0,
+                    'cost_0_30': 0.0, 'cost_30_90': 0.0, 'cost_90_180': 0.0,
+                    'cost_180_365': 0.0, 'cost_365_plus': 0.0,
                 }
                 # ... and the matching one receives the quantity.
-                vals[self._bucket(age)] = lqty
+                bucket = self._bucket(age)
+                vals[bucket] = lqty
+                vals[bucket.replace('qty_', 'cost_')] = lqty * cost[pid]
                 vals_list.append(vals)
         return vals_list
 
@@ -318,12 +332,12 @@ class StockAgeingReport(models.Model):
                 'product': rec.product_id.name or '',
                 'never_sold': rec.no_sale,
                 'quantity': 0.0, 'available_quantity': 0.0, 'value': 0.0,
-                **{b: 0.0 for b in self.BUCKETS},
+                **{b: 0.0 for b in self.BUCKETS + self.COST_BUCKETS},
             })
             # then add this layer's numbers to the line
             line['quantity'] += rec.quantity
             line['available_quantity'] += rec.available_quantity
             line['value'] += rec.value
-            for b in self.BUCKETS:
+            for b in self.BUCKETS + self.COST_BUCKETS:
                 line[b] += rec[b]
         return list(grouped.values())

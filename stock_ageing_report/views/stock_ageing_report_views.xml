@@ -19,6 +19,11 @@
                 <field name="quantity" type="measure"/>
                 <field name="available_quantity" type="measure"/>
                 <field name="value" type="measure"/>
+                <field name="cost_0_30" type="measure"/>
+                <field name="cost_30_90" type="measure"/>
+                <field name="cost_90_180" type="measure"/>
+                <field name="cost_180_365" type="measure"/>
+                <field name="cost_365_plus" type="measure"/>
             </pivot>
         </field>
     </record>
@@ -41,6 +46,11 @@
                 <field name="quantity" sum="Total"/>
                 <field name="available_quantity" sum="Total"/>
                 <field name="value" sum="Total"/>
+                <field name="cost_0_30" sum="Total"/>
+                <field name="cost_30_90" sum="Total"/>
+                <field name="cost_90_180" sum="Total"/>
+                <field name="cost_180_365" sum="Total"/>
+                <field name="cost_365_plus" sum="Total"/>
                 <!-- only visible when the user works with several companies -->
                 <field name="company_id" groups="base.group_multi_company"/>
             </list>

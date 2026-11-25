@@ -15,7 +15,8 @@ from odoo.exceptions import UserError
 # the order of the values returned by `_row()` below.
 HEADERS = ['Warehouse', 'Location', 'Internal Reference', 'Product', 'Never Sold',
            '0 - 30 Days', '30 - 90 Days', '90 - 180 Days', '180 - 365 Days',
-           '365+ Days', 'Total Quantity', 'Available Quantity', 'Total Cost']
+           '365+ Days', 'Total Quantity', 'Available Quantity', 'Total Cost',
+           '0 - 30 Cost', '30 - 90 Cost', '90 - 180 Cost', '180 - 365 Cost', '365+ Cost']
 
 
 class StockAgeingWizard(models.TransientModel):
@@ -101,7 +102,9 @@ class StockAgeingWizard(models.TransientModel):
         return [line['warehouse'], line['location'], line['code'], line['product'],
                 'Yes' if line['never_sold'] else 'No',
                 line['qty_0_30'], line['qty_30_90'], line['qty_90_180'],
-                line['qty_180_365'], line['qty_365_plus'], line['quantity'], line['available_quantity'], line['value']]
+                line['qty_180_365'], line['qty_365_plus'], line['quantity'], line['available_quantity'], line['value'],
+                line['cost_0_30'], line['cost_30_90'], line['cost_90_180'],
+                line['cost_180_365'], line['cost_365_plus']]
 
     @staticmethod
     def _build_csv(rows):
@@ -135,7 +138,7 @@ class StockAgeingWizard(models.TransientModel):
         sheet.set_column(0, 1, 28)
         sheet.set_column(2, 2, 16)
         sheet.set_column(3, 3, 40)
-        sheet.set_column(4, 12, 14)
+        sheet.set_column(4, 17, 14)
         sheet.freeze_panes(1, 0)
         book.close()
         return out.getvalue()
